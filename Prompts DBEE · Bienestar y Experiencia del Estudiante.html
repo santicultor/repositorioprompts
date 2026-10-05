@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prompts DBEE · Bienestar y Experiencia del Estudiante · UniSabana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --pri:#00205B;--sec:#00387B;
+  --bg:#F5F8FD;--surf:#FFFFFF;--surf2:#EEF3FC;--ink:#0A1A3F;--mut:#586A8E;--line:#DFE7F4;
+  --tint:#E8F0FF;--tint2:#D3E2FF;--link:#00387B;--numbg:#00387B;
+  --btn1:#00205B;--btn2:#00387B;--side:#FFFFFF;
+  --glow1:rgba(0,56,123,.20);--glow2:rgba(0,32,91,.12);
+  --shadow:0 1px 2px rgba(0,32,91,.05),0 8px 24px rgba(0,32,91,.07);
+  --shadow-lg:0 12px 44px rgba(0,32,91,.15);
+  --ui:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --disp:'Playfair Display',Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#040B20;--surf:#0A1736;--surf2:#0E1F47;--ink:#EAF1FF;--mut:#9BB0D8;--line:#173064;
+    --tint:#102454;--tint2:#1B3A80;--link:#9CC0FF;--numbg:#0A4DA8;--btn1:#00387B;--btn2:#0A4DA8;--side:#071230;
+    --glow1:rgba(40,110,220,.30);--glow2:rgba(0,56,123,.35);
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--shadow-lg:0 12px 44px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#040B20;--surf:#0A1736;--surf2:#0E1F47;--ink:#EAF1FF;--mut:#9BB0D8;--line:#173064;
+  --tint:#102454;--tint2:#1B3A80;--link:#9CC0FF;--numbg:#0A4DA8;--btn1:#00387B;--btn2:#0A4DA8;--side:#071230;
+  --glow1:rgba(40,110,220,.30);--glow2:rgba(0,56,123,.35);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--shadow-lg:0 12px 44px rgba(0,0,0,.5);
+}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.55}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:8px}
+
+/* ---------- LAYOUT ---------- */
+.app{display:grid;grid-template-columns:276px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:env(safe-area-inset-top,0px);height:calc(100vh - env(safe-area-inset-top,0px));overflow-y:auto;background:var(--side);border-right:1px solid var(--line);padding:18px 12px 14px;display:flex;flex-direction:column;gap:2px}
+.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 16px}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff;display:grid;place-items:center;font-size:19px;flex:none;box-shadow:0 4px 14px rgba(0,56,123,.35)}
+.brand b{display:block;font-size:16px;line-height:1.15}
+.brand small{display:block;font-size:11.5px;color:var(--mut);line-height:1.25}
+.nl{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;font-weight:500;font-size:14px;color:var(--ink);border:0;background:transparent;width:100%;text-align:left}
+.nl:hover{background:var(--surf2)}
+.nl[aria-current="page"]{background:var(--tint);color:var(--link);font-weight:700}
+.nl .em{width:22px;text-align:center;flex:none}
+.nl .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nl .ct{font-size:12px;color:var(--mut);font-weight:500}
+.sl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:700;padding:16px 10px 6px}
+.nl.rc{font-size:13px;font-weight:400;color:var(--mut);padding:6px 10px}
+.nl.rc:hover{color:var(--ink)}
+.sfoot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.lbl{font-size:12px;color:var(--mut);font-weight:600;padding:0 4px}
+select.areaSel{width:100%;padding:9px 10px;border-radius:11px;border:1px solid var(--line);background:var(--surf);color:var(--ink)}
+.themeb{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surf);border-radius:11px;padding:8px 10px;font-size:13px;font-weight:600;color:var(--ink)}
+.themeb:hover{background:var(--surf2)}
+.col{min-width:0}
+.mtop{display:none}
+.main{padding:0 clamp(16px,4vw,52px) 80px;outline:none}
+.in{max-width:1040px;margin:0 auto}
+.scrim{display:none}
+
+/* ---------- HOME ---------- */
+.hero{position:relative;isolation:isolate;text-align:center;padding:clamp(34px,8vw,86px) 0 18px}
+.hero::before{content:"";position:absolute;left:-12%;right:-12%;top:-30px;height:460px;z-index:-1;pointer-events:none;
+  background:radial-gradient(520px 250px at 24% 32%,var(--glow1),transparent 72%),radial-gradient(500px 230px at 78% 22%,var(--glow2),transparent 72%);filter:blur(8px)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 8px;font-size:13px;font-weight:600;color:var(--mut);box-shadow:var(--shadow)}
+.pill i{font-style:normal;background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff;border-radius:999px;padding:1px 8px;font-size:12px}
+.hero h1{font-family:var(--disp);font-size:clamp(32px,6vw,56px);line-height:1.08;letter-spacing:-.01em;margin:18px 0 12px;font-weight:700;
+  background:linear-gradient(120deg,var(--ink) 20%,var(--link) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{max-width:620px;margin:0 auto;color:var(--mut);font-size:clamp(15px,2vw,17.5px)}
+.sbox{position:relative;max-width:720px;margin:28px auto 0;text-align:left}
+.comp{display:flex;align-items:center;gap:10px;background:var(--surf);border:1.5px solid var(--line);border-radius:22px;padding:9px 9px 9px 18px;box-shadow:var(--shadow-lg);transition:border-color .2s,box-shadow .2s}
+.comp:focus-within{border-color:var(--link);box-shadow:0 0 0 4px var(--tint2),var(--shadow-lg)}
+.comp .mg{color:var(--mut);font-size:18px}
+.comp input{flex:1;min-width:0;border:0;background:transparent;outline:none;font-size:17px;padding:10px 0}
+.comp input::placeholder{color:var(--mut)}
+.go{width:44px;height:44px;border-radius:14px;border:0;background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff;font-size:19px;flex:none}
+.go:hover{filter:brightness(1.12)}
+.sbox.sm{margin:0;max-width:none}
+.sbox.sm .comp{box-shadow:var(--shadow);border-radius:16px;padding:4px 5px 4px 14px}
+.sbox.sm .comp input{font-size:15px;padding:9px 0}
+.sbox.sm .go{width:38px;height:38px;border-radius:11px;font-size:16px}
+.sug{position:absolute;left:0;right:0;top:calc(100% + 8px);background:var(--surf);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lg);z-index:30;overflow:hidden}
+.sug[hidden]{display:none}
+.si{display:flex;gap:12px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--line)}
+.si:hover,.si:focus-visible{background:var(--tint);outline:none}
+.si .e{font-size:20px;line-height:1.3}
+.si b{display:block;font-size:14.5px;line-height:1.3}
+.si span{display:block;font-size:12.5px;color:var(--mut);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60ch}
+.si.all{color:var(--link);font-weight:700;font-size:14px;border-bottom:0;justify-content:center}
+.try{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+.try button{border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.try button:hover{border-color:var(--link);background:var(--tint)}
+.myarea{margin:18px auto 0;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.myarea select{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surf);font-size:13px}
+
+.sec{margin-top:42px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.sh h2{font-size:20px;font-weight:700;letter-spacing:-.005em}
+.sh p{color:var(--mut);font-size:14px;margin-top:2px}
+.sh a{color:var(--link);font-weight:700;font-size:14px;white-space:nowrap}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.hw{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.hw .n{width:30px;height:30px;border-radius:50%;background:var(--numbg);color:#fff;display:grid;place-items:center;font-weight:700;margin-bottom:10px}
+.hw h3{font-size:16px;margin-bottom:4px}
+.hw p{color:var(--mut);font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.tile{display:flex;flex-direction:column;gap:6px;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.tile:hover{transform:translateY(-2px);border-color:var(--link)}
+.tile .ic{width:44px;height:44px;border-radius:13px;background:var(--tint);display:grid;place-items:center;font-size:22px;margin-bottom:4px}
+.tile h3{font-size:16px;line-height:1.25}
+.tile p{color:var(--mut);font-size:13.5px}
+.tile .ct{margin-top:auto;padding-top:6px;font-size:12.5px;font-weight:700;color:var(--link)}
+
+/* ---------- LISTAS / TARJETAS ---------- */
+.vh{padding:clamp(22px,4vw,40px) 0 6px}
+.crumbs{font-size:13px;color:var(--mut);margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.crumbs a{color:var(--link);font-weight:600}
+.crumbs a:hover{text-decoration:underline}
+.vh h1{font-size:clamp(24px,4vw,34px);line-height:1.15;letter-spacing:-.01em;font-weight:700}
+.vh .d{color:var(--mut);margin-top:6px;max-width:700px}
+.bar2{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 8px}
+.bar2 .sbox{flex:1;min-width:220px}
+.pills{display:flex;gap:7px;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch}
+.pills::-webkit-scrollbar{height:0}
+.pl2{flex:none;border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.pl2:hover{border-color:var(--link)}
+.pl2[aria-pressed="true"],.pl2[aria-current="page"]{background:var(--numbg);border-color:var(--numbg);color:#fff}
+.cnt{margin-left:auto;font-size:13px;color:var(--mut);padding-left:8px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.pc{position:relative;display:flex;flex-direction:column;gap:7px;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.pc:hover{transform:translateY(-2px);border-color:var(--link)}
+.pc .top{display:flex;justify-content:space-between;align-items:center}
+.pc .ic{width:38px;height:38px;border-radius:11px;background:var(--tint);display:grid;place-items:center;font-size:19px}
+.pc h3{font-size:16.5px;line-height:1.28;font-weight:700}
+.pc h3 a::after{content:"";position:absolute;inset:0;border-radius:18px}
+.pc .wh{font-size:13.5px;color:var(--mut);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pc .wh b{color:var(--ink);font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.chip{background:var(--tint);color:var(--link);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
+.chip.ar{background:transparent;border:1px solid var(--line);color:var(--mut)}
+.chip.ok{background:var(--numbg);color:#fff}
+.chip.need{background:transparent;border:1px dashed var(--mut);color:var(--mut)}
+.step.ok1{background:var(--tint);border-color:var(--tint2);box-shadow:none}
+.star{position:relative;z-index:2;border:0;background:transparent;font-size:21px;line-height:1;color:var(--mut);padding:5px;border-radius:9px}
+.star:hover{color:var(--link);background:var(--tint)}
+.star.on{color:var(--link)}
+.empty{padding:48px 16px;text-align:center;color:var(--mut);background:var(--surf);border:1px dashed var(--line);border-radius:18px}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+.empty .try{margin-top:14px}
+.hint{color:var(--mut);font-size:14px}
+
+/* ---------- DETALLE ---------- */
+.info3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0 22px}
+.inf{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.inf h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--link);margin-bottom:5px}
+.inf p{font-size:14.5px}
+.dgrid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:22px;align-items:start}
+.stk{position:sticky;top:calc(14px + env(safe-area-inset-top,0px))}
+.step{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.step>h3{display:flex;gap:10px;align-items:center;font-size:15.5px;margin-bottom:10px}
+.num{width:26px;height:26px;border-radius:50%;background:var(--numbg);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+.ul li{position:relative;padding-left:16px;margin-bottom:5px;font-size:14px}
+.ul li::before{content:"•";position:absolute;left:3px;color:var(--link)}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld:last-child{margin-bottom:0}
+.fld label{font-size:13px;font-weight:600}
+.fld input,.fld textarea,.fld select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.fld textarea{min-height:90px;resize:vertical}
+.fld input:focus,.fld textarea:focus,.fld select:focus{outline:none;border-color:var(--link);box-shadow:0 0 0 3px var(--tint2)}
+.tg{display:flex;gap:7px;align-items:center;font-size:13px;color:var(--mut);cursor:pointer}
+.pvh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.pvh h3{margin:0!important}
+.pv{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px;font-family:var(--mono);font-size:12.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;max-height:min(52vh,520px);overflow:auto}
+.pv .ctx{opacity:.6;display:block;border-bottom:1px dashed var(--line);margin-bottom:10px;padding-bottom:10px}
+.pv mark{background:var(--tint2);color:var(--ink);border-radius:5px;padding:0 4px}
+.pv .fill{border-bottom:2px solid var(--link)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 20px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--btn1),var(--btn2));box-shadow:0 6px 18px rgba(0,56,123,.28)}
+.btn:hover{filter:brightness(1.12)}
+.btn.big{width:100%;margin-top:12px;font-size:16px;padding:14px}
+.btn.ghost{background:var(--surf);color:var(--ink);border:1px solid var(--line);box-shadow:none;font-weight:600;padding:10px 14px;font-size:14px}
+.btn.ghost:hover{border-color:var(--link);background:var(--tint)}
+.ai{display:flex;gap:8px;flex-wrap:wrap}
+.tip{border-left:4px solid var(--link)}
+.src{font-size:12.5px;color:var(--mut);margin-top:6px}
+.nx{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.nx a{display:block;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px}
+.nx a:hover{border-color:var(--link)}
+.nx a small{display:block;color:var(--mut);font-size:12.5px;margin-bottom:2px}
+.mbar{display:none}
+
+/* ---------- HERRAMIENTAS / REGLAS / GUÍA ---------- */
+.tc{background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:9px;box-shadow:var(--shadow)}
+.tc h3{font-size:16.5px;line-height:1.28}
+.tc .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.badge{border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;background:var(--tint);color:var(--link)}
+.badge.live{background:var(--numbg);color:#fff}
+.tc .rs{font-size:13px;color:var(--mut);border-top:1px dashed var(--line);padding-top:8px}
+.lnk{color:var(--link);font-weight:700;word-break:break-all;font-size:14px}
+.lnk:hover{text-decoration:underline}
+.rl{display:grid;gap:12px;counter-reset:r}
+.rule{position:relative;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:16px 18px 16px 62px;box-shadow:var(--shadow)}
+.rule::before{counter-increment:r;content:counter(r);position:absolute;left:16px;top:15px;width:32px;height:32px;border-radius:50%;background:var(--numbg);color:#fff;display:grid;place-items:center;font-weight:700}
+.rule h3{font-size:16.5px;margin-bottom:3px}
+.rule p{color:var(--mut);font-size:14px;margin-bottom:8px}
+.lk{display:flex;gap:6px;flex-wrap:wrap}
+.lk a{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:600;color:var(--link)}
+.lk a:hover{border-color:var(--link)}
+.faq details{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:700;font-size:15px}
+.faq details[open] summary{margin-bottom:6px}
+.faq p{color:var(--mut);font-size:14.5px}
+table.mp{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14px}
+table.mp td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+table.mp tr:last-child td{border-bottom:0}
+table.mp td:first-child{font-weight:600;width:48%}
+table.mp a{color:var(--link);font-weight:700}
+.tw{overflow-x:auto}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;text-align:center}
+.foot a{color:var(--link);font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--pri);color:#fff;padding:11px 20px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:90;border:1px solid rgba(255,255,255,.3)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- MÓVIL / TABLET ---------- */
+@media (max-width:980px){
+  .app{display:block}
+  .side{position:fixed;top:0;left:0;bottom:0;width:min(86vw,320px);height:auto;z-index:70;transform:translateX(-102%);transition:transform .25s;padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow-lg)}
+  body.menu .side{transform:none}
+  body.menu .scrim{display:block;position:fixed;inset:0;background:rgba(0,12,40,.55);z-index:60}
+  .mtop{display:flex;align-items:center;gap:10px;position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--surf);border-bottom:1px solid var(--line);padding:9px 14px}
+  .mtop .logo{width:32px;height:32px;border-radius:10px;font-size:16px}
+  .mtop b{font-size:15px;flex:1}
+  .ib{border:1px solid var(--line);background:var(--surf);border-radius:11px;width:40px;height:40px;font-size:18px}
+  .how{grid-template-columns:1fr}
+  .info3{grid-template-columns:1fr}
+  .dgrid{grid-template-columns:1fr}
+  .stk{position:static}
+  .mbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surf);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 24px rgba(0,32,91,.1)}
+  .mbar .btn{flex:1}
+  .main.hasbar{padding-bottom:110px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Menú principal"></aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="col">
+    <header class="mtop">
+      <button class="ib" data-menu aria-label="Abrir menú">☰</button>
+      <span class="logo" aria-hidden="true">✦</span><b>Prompts DBEE</b>
+      <button class="ib" data-theme aria-label="Cambiar entre tema claro y oscuro">◐</button>
+    </header>
+    <main class="main" id="main" tabindex="-1"></main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ============ DATOS EDITABLES ============
+   Para agregar un prompt: copia un objeto de PROMPTS y cambia sus campos.
+   Variables dentro del texto: {{clave}}  → deben existir en vars.
+   "Cuándo usarlo" y "Qué obtienes" de cada prompt están en WHEN (más abajo).
+======================================== */
+const T=(k,l,ph,def,opt)=>({k,l,ph:ph||'',def:def||'',opt:!!opt});
+const A=(k,l,ph,def,opt)=>({k,l,ph:ph||'',def:def||'',opt:!!opt,t:'area'});
+const S=(k,l,opts)=>({k,l,t:'select',opts});
+
+const CTX_TAIL=`MARCA
+Azul principal #00205B, azul claro #00387B y blanco. Tipografía: Playfair Display (títulos) y DM Sans (texto).
+
+TONO
+Cercano, profesional e inspirador; nunca burocrático. Español de Colombia.
+
+VOCABULARIO
+«habilidades humanas» (no «habilidades blandas»), «UniSabana Xperience» (no «Experience»), «DBEE» (no «BEE»).
+
+INTEGRIDAD
+No inventes datos institucionales (cifras, logros, fechas, nombres de programas, cargos ni personas). Usa solo lo que te doy en este chat (texto o archivos que adjunte). Si falta algo, dilo y pregúntame; no lo rellenes con estimaciones. Verifica toda la aritmética antes de entregar.`;
+
+
+/* ===== Material institucional que viaja DENTRO de los prompts (para que funcionen en un chat vacío) ===== */
+const REF_MODELO=`MODELO DE BIENESTAR INSTITUCIONAL · UNIVERSIDAD DE LA SABANA (resumen del documento oficial)
+- Se concibe como un ecosistema que integra programas, estrategias, personas y acciones para enriquecer la experiencia de la comunidad universitaria y favorecer la permanencia, la calidad y el desempeño.
+- Tres propósitos: (1) formación integral para la vida; (2) calidad de vida; (3) desempeño académico y profesional.
+- Núcleo: la persona (única, perfectiva, social y comunicativa), vista de forma individual o como grupo de personas.
+- Seis dimensiones del ser humano: física-biológica, psicológica-afectiva, cognitiva-intelectual, social-cultural, ética-moral y espiritual-trascendente.
+- Tres principios del eje de cuidado: cuidado de sí mismo (autocuidado), cuidado del otro y cuidado del entorno.
+- Eje formativo: las acciones de bienestar son intencionalmente formativas y aportan a la competencia de liderazgo transformador y a UniSabana Xperience.
+- Eje relacional («engranajes»): redes de apoyo y articulación interna y externa; el bienestar es una corresponsabilidad de todas las personas, no de una sola unidad.
+- Frentes de experiencias significativas y transformadoras: Bienestar a la medida; Actividad física y desarrollo deportivo; Arte y cultura; Salud integral; Talento Sabana; Capellanía universitaria; Redes de alto impacto.
+- Facilitadores: Campus 3S (seguro, saludable y sostenible) y UniSabana Familiarmente Responsable.
+- Seis tareas de la Dirección de Bienestar y Experiencia del Estudiante (DBEE): estrategias de éxito académico; personalizar el servicio con el 360º del estudiante; promoción y prevención para una vida plena y la salud integral; desarrollar competencias de manera intencionada; formar estudiantes líderes con actitud de servicio e impacto tangible; e impulsar el arte, la cultura, el deporte y la actividad física hacia un bienestar perfectivo.`;
+
+const REF_XPERIENCE=`UNISABANA XPERIENCE (resumen del documento maestro institucional)
+- Es el modelo académico institucional de la Universidad de La Sabana (materializa la Visión 2029). Integra currículo, pedagogía, experiencia universitaria, internacionalización, tecnología, humanismo y relación con el entorno. Aplica a quienes ingresan desde 2026-2. NO es un programa académico, ni una metodología aislada, ni una plataforma, ni una iniciativa complementaria.
+- Cuatro rasgos formativos: (1) CoInteligencia: integración ética y estratégica entre inteligencia humana e inteligencia artificial. (2) Actitud Humanizadora: sello distintivo (dignidad humana, ética, solidaridad, servicio, cultura, arte, trascendencia). (3) Conexión Global: inglés, tercera lengua, movilidad, interculturalidad, doble titulación, COIL. (4) Conexión con el Entorno: aprender transformando realidades (retos, proyectos, aprendizaje servicio, investigación aplicada).
+- Cuatro componentes: Flexibilidad; Profesores, Maestros de Vida; Aprendizaje Experiencial; Experiencia Universitaria Transformadora (integra bienestar, cultura, deporte, internacionalización, liderazgo y vida universitaria).
+- Rol de Bienestar: protagonista en Actitud Humanizadora y en Conexión con el Entorno (cultura, arte, deporte, solidaridad, desarrollo humano, acompañamiento estudiantil).
+- Cinco metacompetencias: Desarrollar Actitud Humanizadora; Ejercer Liderazgo Transformador; Cultivar Ciudadanía Global; Innovar y Ser Creativo; Desarrollar CoInteligencia.
+- Experiencias Xperience: PAT (Programa Aprendamos a Trabajar), HIX, Semilleros, Challenges, Voluntariado e Internacionalización.
+- HIX (High Impact Experiences, experiencias de alto impacto). Ocho elementos de calidad: altas expectativas; tiempo y esfuerzo; interacción significativa; diversidad de contextos; retroalimentación permanente; reflexión guiada; aplicación real; demostración pública. HIX complementarias: grupos representativos, voluntariado, desarrollo deportivo, movilidad, monitorías, becas formativas y retos cocurriculares.
+- Reglas para comunicar: explicar primero los rasgos y luego los componentes; nunca llamarlo plataforma; nunca reducirlo a IA; relacionar siempre tecnología y humanismo; usar ejemplos reales; destacar el aprendizaje experiencial y la construcción de la hoja de vida desde el primer día.`;
+
+const REF_GRUPOS=`LOS 15 GRUPOS ARTÍSTICOS REPRESENTATIVOS
+Música: Coro · Orquesta Sinfónica UniSabana (OSUS) · Tuna Masculina · Tuna Femenina · Fusión · US Band · Puente Rojo (pop) · Punto Rock (rock) · Entre Mares · Vallenato y Parranda · Repercusión.
+Danza: Danza Folclórica Ancestros · Salsa y Bachata Saoko · Danza Urbana Génesis.
+Teatro: Grupo de Teatro.`;
+
+const CRIT_ITEMS=`Criterios de redacción base (si tu equipo tiene su propia lista, pégala en el campo de criterios propios y úsala en su lugar):
+1. Una sola idea por ítem (sin ítems dobles).
+2. Lenguaje claro y sencillo; sin tecnicismos ni coloquialismos.
+3. Sin palabras ambiguas o subjetivas («relevante», «difícil», «principal», «oportunamente»).
+4. Redacción afirmativa; evitar negaciones.
+5. Conducta observable, no conocimiento ni intención.
+6. Sin deseabilidad social evidente (que la respuesta «correcta» no sea obvia).
+7. Sin traslape con otros ítems del mismo indicador ni de otros indicadores.
+8. Mismo marco temporal en todos los ítems.
+9. Primera persona y estructura consistente.
+10. Evitar absolutos («siempre», «nunca») salvo que midan frecuencia.
+11. Enunciados cortos y de longitud similar.
+12. Escala de respuesta coherente con el enunciado.
+13. No mezclar lo cognitivo con lo metacognitivo ni con lo socioemocional.`;
+
+const CATS=[
+ {id:'base',n:'Primeros pasos',e:'🧭',w:'Si es tu primera vez, vas a abrir un chat nuevo o necesitas una presentación base.'},
+ {id:'docs',n:'Escribir documentos',e:'📄',w:'Expedientes, cartas, actas e informes con formato institucional.'},
+ {id:'eventos',n:'Organizar un evento',e:'🎪',w:'Cronogramas, guiones, invitaciones y listas de tareas.'},
+ {id:'pres',n:'Presentar ante un comité',e:'🖥️',w:'Prepara propuestas, presentaciones y la defensa de tus cifras.'},
+ {id:'activ',n:'Crear una actividad o taller',e:'🎯',w:'Ferias, juegos, talleres y sesiones colaborativas.'},
+ {id:'datos',n:'Analizar datos y hacer tableros',e:'📊',w:'Convierte informes y Excel en dashboards y reportes.'},
+ {id:'invest',n:'Investigar y sustentar',e:'🔬',w:'Revisiones de literatura, benchmarks y marcos teóricos.'},
+ {id:'comu',n:'Comunicar y convocar',e:'📣',w:'Correos, comunicados, concursos y reportes de resultados.'},
+ {id:'instr',n:'Medir con encuestas',e:'📝',w:'Encuestas, instrumentos y recomendaciones por nivel de riesgo.'},
+ {id:'calidad',n:'Revisar antes de entregar',e:'✅',w:'Verifica datos, cifras y calidad antes de enviar algo.'}
+];
+const OUTS=['Word','HTML','Excel','PowerPoint','Texto','PDF'];
+const PROMPTS=[];
+PROMPTS.push(
+
+/* ================= EMPIEZA AQUÍ ================= */
+{id:'ctx-maestro',cat:'base',t:'Contexto institucional UniSabana (pégalo al inicio de cualquier chat)',
+ d:'Bloque maestro con marca, tono, vocabulario y reglas de integridad. Úsalo en un chat nuevo o en una herramienta que no tenga cargado el Proyecto.',
+ out:['Texto'],noCtx:true,attach:[],vars:[],
+ body:'__CTX__',
+ tips:['Si trabajas dentro del Proyecto de Claude con estas instrucciones cargadas, no hace falta pegarlo.','Cuando cambie algo institucional, se actualiza aquí una sola vez y todo el equipo copia la misma versión.','Los demás prompts de este repositorio pueden anteponerlo automáticamente con el interruptor de la vista previa.'],
+ src:'Instrucciones iniciales del asistente y correcciones acumuladas en los chats del proyecto'},
+
+{id:'pres-unisabana',cat:'base',t:'Presentación estilo UniSabana (plantilla base)',
+ d:'Plantilla para generar presentaciones institucionales con la paleta, tono y estructura de la Universidad, en HTML interactivo o PowerPoint.',
+ out:['HTML','PowerPoint'],attach:['~Tu documento fuente, si el contenido es largo','~Logo institucional, si lo vas a usar'],
+ vars:[T('tipo','Tipo de contenido','informe de semestre, propuesta, lanzamiento…'),S('publico','Público',['Estudiantes','Docentes y maestros','Directivos y comités','Externos']),T('n','Número de diapositivas','10'),S('formato','Formato',['Presentación HTML interactiva','PowerPoint (.pptx)']),A('contenido','Contenido o mensajes clave','Pega aquí tus notas o ideas')],
+ body:`Crea una presentación institucional de la Universidad de La Sabana.
+
+TIPO DE CONTENIDO: {{tipo}}
+PÚBLICO: {{publico}}
+EXTENSIÓN: {{n}} diapositivas
+FORMATO: {{formato}}
+
+CONTENIDO / MENSAJES CLAVE:
+{{contenido}}
+
+DISEÑO
+- Paleta: azul #00205B, azul claro #00387B y blanco; grises azulados solo como apoyo.
+- Tipografía: Playfair Display para títulos y DM Sans para texto.
+- Una idea por diapositiva, poco texto, jerarquía clara. Sin imágenes de stock que yo no haya aprobado.
+- Si es HTML: un solo archivo autocontenido (imágenes en base64, funciona sin internet), navegación con flechas del teclado y táctil.
+
+ESTRUCTURA
+Portada → por qué importa → desarrollo (una diapositiva por idea) → resultados o impacto → siguiente paso o decisión que se necesita.
+
+TONO
+Cercano, profesional e inspirador, dirigido a {{publico}}. Nunca burocrático ni defensivo.
+
+REGLAS
+Si mencionas UniSabana Xperience, descríbelo como el modelo académico institucional (no como una plataforma ni solo como IA).
+Usa únicamente los datos que te di. Si falta información, avísame al final de tu respuesta con ⚠ y pregúntame antes de inventar.`,
+ tips:['Entrega primero un borrador, mira la versión construida y pide ajustes con lista numerada (ver «Cambios quirúrgicos»).','Para comités: cierra con lo que el comité debe decidir, no con datos de contacto.','Notas del orador en viñetas cortas, no en párrafos.'],
+ src:'Plantilla de presentaciones estilo UniSabana y decks de comité'},
+
+{id:'voz-texto',cat:'base',t:'Dictado por voz → texto formal',
+ d:'Convierte un dictado informal en un documento en español institucional, sin perder datos ni agregar ideas.',
+ out:['Texto','Word'],attach:[],
+ vars:[T('tipo','Qué quieres obtener','carta formal, correo, resumen, párrafo para un expediente…'),A('dictado','Pega aquí el dictado')],
+ body:`Te voy a pasar un dictado por voz. Conviértelo en {{tipo}} en español formal institucional.
+
+REGLAS
+- Resuelve autocorrecciones y muletillas («o sea», «perdón, quise decir…») quedándote con la versión final.
+- Conserva TODOS los datos, fechas, cifras y nombres tal como los dije. No agregues información ni argumentos nuevos.
+- Si algo es ambiguo o parece contradictorio, no lo resuelvas por tu cuenta: déjalo marcado con ⚠ al final con una pregunta concreta.
+- Tono cercano, profesional, nunca burocrático.
+
+DICTADO:
+{{dictado}}`,
+ tips:['Pide primero el texto y luego el formato (Word, correo): así corriges contenido y diseño por separado.','Si dudas entre dos tonos, pide «dos versiones etiquetadas» y escoge una.'],
+ src:'Cartas, correos y documentos creados a partir de voz a texto'},
+
+{id:'continuar-chat',cat:'base',t:'Retomar el trabajo en un chat nuevo (traspaso)',
+ d:'Dos mensajes para cuando un chat se llena: uno pide el resumen de traspaso y el otro arranca la continuidad sin perder decisiones ni correcciones.',
+ out:['Texto'],noCtx:true,attach:['El último archivo vigente del trabajo'],vars:[],
+ body:`PARTE A · En el chat que ya está muy largo, escribe:
+
+Estamos por llegar al límite de este chat. Genera un resumen de traspaso para continuar en un chat nuevo, con: (1) objetivo del trabajo, (2) decisiones ya tomadas, (3) correcciones que te pedí y no debes repetir, (4) archivos y versiones vigentes con su nombre exacto, (5) pendientes marcados con ⚠, (6) el siguiente paso concreto. Sé específico y breve: viñetas, sin relleno.
+
+PARTE B · En el chat nuevo, escribe:
+
+Continuamos un trabajo que venía en otro chat. Adjunto el último archivo vigente y este resumen de traspaso: [PEGA AQUÍ EL RESUMEN]. Antes de modificar nada, confírmame en tres líneas qué entendiste y cuál es el siguiente paso.`,
+ tips:['Adjunta siempre el archivo más reciente: un chat nuevo no ve los archivos del anterior.','Si el trabajo es un HTML largo, pide también dónde viven los datos y la configuración, para ubicar rápido qué editar.'],
+ src:'Chat que llegó a su límite de longitud a mitad de una tarea'},
+
+/* ================= DOCUMENTOS ================= */
+{id:'exp-word',cat:'docs',t:'Expediente Comité en Word',
+ d:'Convierte una propuesta o notas en el formato institucional de Expediente Comité, con la estructura oficial incluida en el prompt.',
+ out:['Word'],attach:['~Un expediente anterior que te haya gustado, como modelo visual'],
+ vars:[T('titulo','Asunto de la iniciativa'),T('ponente','Ponente'),T('fecha','Fecha del comité','por ejemplo, 22 de julio de 2026'),S('impacto','Tipo de impacto',['Operativo','Táctico','Estratégico']),T('jefaturas','Jefaturas que revisan (se marcan con x)','por ejemplo, Desarrollo Cultural, Protocolo y Eventos'),S('faltante','Si falta información',['dejar el campo en blanco, sin comentarios ni banderas','marcar con ⚠ lo pendiente']),A('fuente','Contenido fuente: pega aquí tu propuesta o tus notas')],
+ body:`Convierte el contenido fuente en un EXPEDIENTE COMITÉ en Word (.docx), con el formato institucional de la Dirección de Bienestar y Experiencia del Estudiante (DBEE) de la Universidad de La Sabana. El formato completo está descrito abajo: no necesitas ningún archivo de plantilla.
+
+DATOS
+- Asunto: {{titulo}}
+- Ponente: {{ponente}}
+- Fecha: {{fecha}}
+- Tipo de impacto: {{impacto}}
+- Jefaturas que revisan: {{jefaturas}}
+
+CONTENIDO FUENTE
+{{fuente}}
+
+FORMATO OFICIAL (reprodúcelo tal cual; no lo rediseñes)
+1. Encabezado centrado y en negrita: «EXPEDIENTE COMITÉ» y debajo «DIRECCIÓN DE BIENESTAR Y EXPERIENCIA DEL ESTUDIANTE».
+2. «Tipo de impacto» (con llamada a la nota al pie 1) y una tabla de tres columnas: OPERATIVO | TÁCTICO | ESTRATÉGICO, con una «x» bajo la opción elegida.
+3. Tabla de dos columnas: «Fecha: …» | «Ponente: …» y, debajo, una fila combinada con «Asunto: …».
+4. Tabla de revisión por jefaturas, con siete columnas y una «x» bajo cada jefatura que revisa: Director de Bienestar y Experiencia del Estudiante · Jefatura de Experiencia del Estudiante · Jefatura de Desarrollo Cultural, Protocolo y Eventos · Jefatura de Éxito Académico · Jefatura de Prevención y Salud · Jefatura de Desarrollo Deportivo · Jefatura de Gestión de Becarios.
+5. «1. ANTECEDENTES»: contexto breve de por qué se presenta la propuesta.
+6. «2. PROPUESTA» (con llamada a la nota al pie 2). Dentro, subtítulos en negrita según corresponda a la iniciativa (por ejemplo: Nombre, Objetivo general, Población objetivo, Descripción y justificación, Desarrollo, Requisitos de participación, Recursos y difusión). Usa solo los que la fuente respalde.
+7. «3. CRONOGRAMA TENTATIVO»: tabla de dos columnas: Actividad | Fecha.
+8. «4. PRESUPUESTO ESTIMADO»: tabla de dos columnas: Concepto | Valor estimado (COP), con una fila de total.
+9. Notas al pie (texto exacto):
+   - Nota 1: «Estratégico: son nuestros objetivos a largo plazo, son los objetivos que nos llevan al logro de la visión. Ej: Acreditación Institucional por 10 años, Partner Salud Mental. Táctico: son aquellos planes a mediano y corto plazo que nos ayudan a lograr los objetivos. Ej: Consolidación de cifras y su respectivo análisis para los procesos de Acreditación o mejora continua, a mediano plazo. Operativo: son aquellas tareas de nuestro quehacer diario, a corto plazo. Ej: asesorías, sesiones, talleres, eventos, etc.»
+   - Nota 2: «Planteamiento claro y concreto de la alternativa que se pone a consideración para su aprobación.»
+10. Estilo: Arial; títulos de sección en MAYÚSCULAS, negrita y subrayados; encabezados de tabla en azul #00205B con texto blanco; cierre con un párrafo de firma del ponente.
+
+REGLAS DE CONTENIDO
+- Reproduce solo lo que está en la fuente, ordenado bajo sus títulos. No agregues secciones, contexto ni citas que no pedí.
+- Pasa mis ideas a lenguaje institucional sin cambiar su sentido ni sus cifras.
+- Si falta información: {{faltante}}.
+- Verifica que los totales del presupuesto sumen y dime qué revisaste.`,
+ tips:['La corrección más repetida: secciones que se agregaron sin pedirlas (contexto, citas destacadas, subsecciones duplicadas). Insiste en «solo lo que te di».','Si el documento va directo al comité, pide campos en blanco; usa ⚠ solo en borradores de trabajo.','Para cambios posteriores, pide regenerar el documento completo en lugar de parchar el archivo.','Revisa tildes y ñ al final: una vez se perdieron al limpiar caracteres.'],
+ src:'Expedientes de cambio de nombre de un grupo, vestuario ASCUN, DisfrazARTE y salida a Guaduas; plantilla oficial de Expediente Comité'},
+
+{id:'exp-html',cat:'docs',t:'Expediente en Word → HTML interactivo para el comité semanal',
+ d:'Pasa un expediente a una página HTML con pestañas, paleta azul y componentes interactivos, con el diseño descrito dentro del prompt.',
+ out:['HTML','Word'],attach:['~Un expediente HTML anterior que te haya gustado, para que la IA copie su diseño'],
+ vars:[T('nombre','Nombre del expediente'),T('secciones','Secciones a resaltar (opcional)','','',true),A('fuente','Contenido del expediente: pega aquí el texto del Word')],
+ body:`Convierte el expediente en una página HTML interactiva para presentarlo al comité semanal de la Dirección de Bienestar y Experiencia del Estudiante (DBEE) de la Universidad de La Sabana. El diseño está descrito completo abajo: no necesitas ninguna plantilla.
+
+EXPEDIENTE: {{nombre}}
+SECCIONES A RESALTAR: {{secciones}}
+
+CONTENIDO DEL EXPEDIENTE:
+{{fuente}}
+
+ESPECIFICACIÓN DE DISEÑO
+- Un solo archivo HTML autocontenido: CSS y JavaScript dentro del archivo, imágenes en base64, sin dependencias externas salvo Google Fonts y, si hay gráficos, Chart.js por CDN.
+- Paleta: azul #00205B (cabecera y títulos), azul claro #00387B (acentos y botones), blanco de fondo y grises azulados muy claros para tarjetas. Tipografía Georgia en títulos y texto.
+- Cabecera con «EXPEDIENTE COMITÉ · Dirección de Bienestar y Experiencia del Estudiante», el asunto, la fecha y el ponente.
+- Navegación por pestañas horizontales, una por sección. Las pestañas se adaptan al contenido: Contexto, Propuesta, Cronograma, Presupuesto y las demás que la fuente requiera (hasta unas ocho). La última pestaña es «Resumen y decisiones», con casillas interactivas por cada decisión que se le pide al comité.
+- Componentes interactivos: tarjetas desplegables, línea de tiempo para el cronograma, tabla de presupuesto con totales y comparativos (por ejemplo, frente al año anterior) cuando existan.
+- Responsive, legible en un proyector y con impresión limpia.
+
+REGLAS
+- Las cifras deben ser idénticas a la fuente. Si una suma no cuadra, avísame antes de entregar.
+- No uses imágenes de stock: solo las que yo te dé.
+- Cuando te pida cambios, aplícalos de forma puntual y dame también el párrafo equivalente para pegar en el Word, para que ambas versiones queden sincronizadas.`,
+ tips:['HTML y Word se mantienen en paralelo: cada cambio en uno se pide también para el otro.','Un reemplazo puntual de texto es más seguro que regenerar el archivo completo.','El Word debe respetar el formato institucional original; nunca el diseño de la página web.'],
+ src:'Flujo semanal de expedientes (Ancestros, Génesis, Saeta DF, Inducciones 2026-2)'},
+
+{id:'exp-presentacion',cat:'docs',t:'Expediente → presentación navegable de 15 minutos',
+ d:'Herramienta HTML para presentar un expediente sin leerlo: resalta secciones clave con las flechas y abre paneles de datos solo cuando tú lo decides.',
+ out:['HTML'],attach:['El expediente en Word'],
+ vars:[T('minutos','Duración','15'),T('enlace','Enlace al documento completo (SharePoint)')],
+ body:`Diseña una herramienta HTML para PRESENTAR el expediente adjunto ante el comité en {{minutos}} minutos, sin tener que leer el documento.
+
+IDEA
+- Muestra el expediente con una apariencia similar al Word original y recorre con las flechas ← → solo las secciones que tú selecciones como clave (curaduría tuya, no un algoritmo automático).
+- El texto aparece resaltado primero; los paneles de datos (tablas densas, cifras) se abren únicamente cuando yo lo decida con un clic o una flecha, nunca solos.
+- Botón fijo «Ver documento completo» que abre {{enlace}}.
+- Cierra con lo que el comité debe decidir, no con datos de contacto.
+
+ANTES DE CONSTRUIR
+Dime qué secciones elegirías y por qué (máximo 8 líneas). Después construye.
+
+REQUISITOS
+Paleta #00205B / #00387B / blanco; un solo archivo HTML sin dependencias; datos exactamente como están en el expediente.`,
+ tips:['La primera versión abría paneles automáticamente; se corrigió a «solo con acción deliberada».','Cuando cambien cifras del presupuesto, pide que te explique qué cambió y recalcule el total.'],
+ src:'Expediente ASCUN Nacional (delegación de 52 personas)'},
+
+{id:'carta-constancia',cat:'docs',t:'Circular institucional «a quien corresponda» (participación de un estudiante)',
+ d:'Circular de una página, ya redactada, para avisar a coordinadores y directores que un estudiante participa en un evento y proteger su horario.',
+ out:['Word','PDF'],attach:[],
+ vars:[T('fechacarta','Fecha de la carta','por ejemplo, 18 de septiembre de 2026'),T('nombre','Nombre completo del estudiante'),T('programa','Programa académico'),T('evento','Evento o actividad'),T('fecha','Fecha y horario de la participación','por ejemplo, domingo 20 de septiembre, desde las 7:00 a. m.'),T('lugar','Lugar','por ejemplo, Campus Puente del Común'),T('area','Área que emite la carta','por ejemplo, la Jefatura de Desarrollo Cultural'),T('firmante','Nombre y cargo de quien firma')],
+ body:`Genera en Word (.docx), en una sola página, la siguiente circular institucional de la Universidad de La Sabana. Conserva la estructura y el tono del texto base y ajusta únicamente los datos.
+
+FORMATO
+- Encabezado con un espacio reservado para el logo institucional (no inventes ni dibujes un logo).
+- Colores #00205B y #00387B solo en el encabezado y en el asunto; Arial 11; márgenes normales.
+- Pie de página: «Universidad de La Sabana · Campus Puente del Común, Km 7 Autopista Norte, Chía, Cundinamarca».
+
+TEXTO BASE
+Chía, {{fechacarta}}
+
+A QUIEN CORRESPONDA
+Coordinadores y directores
+
+Asunto: Participación de {{nombre}} en {{evento}}
+
+Cordial saludo.
+
+Por medio de la presente, la Dirección de Bienestar y Experiencia del Estudiante, a través de {{area}}, se permite informar que {{nombre}}, estudiante de {{programa}}, participará en {{evento}}, que se realizará el {{fecha}}, en {{lugar}}.
+
+Su participación hace parte de las actividades institucionales de Bienestar. Por esta razón, de manera respetuosa solicitamos que no se le asignen otras responsabilidades académicas ni administrativas durante ese horario, de modo que pueda cumplir con este compromiso.
+
+Agradecemos de antemano su comprensión y su apoyo al desarrollo integral de nuestros estudiantes.
+
+Cordialmente,
+
+{{firmante}}
+Dirección de Bienestar y Experiencia del Estudiante
+
+IMPORTANTE
+- Es un aviso institucional dirigido «A quien corresponda»; NO es una carta dirigida al estudiante.
+- No agregues datos personales más allá del nombre y el programa.
+- Si algún dato quedó vacío o entre corchetes, márcalo con ⚠ y pregúntamelo; no lo inventes.
+- Entrégame el archivo Word y, al final, el texto en el chat por si quiero pegarlo en un correo.`,
+ tips:['Error frecuente: la primera versión se redactó dirigida al estudiante. El texto base ya corrige esto.','Para varios estudiantes, pide una sola circular con una tabla de nombres y programas.','Confirma el nombre completo de quien firma y su cargo.'],
+ src:'Carta de confirmación de participación para el Día de la Familia'},
+
+{id:'acta',cat:'docs',t:'Acta de reunión clara y breve',
+ d:'Ordena notas desordenadas o dictadas en un acta con decisiones, compromisos, responsables y pendientes.',
+ out:['Word'],attach:[],
+ vars:[T('reunion','Reunión'),T('fecha','Fecha'),T('asistentes','Asistentes'),A('notas','Notas (pueden estar desordenadas o dictadas)')],
+ body:`Estructura un ACTA DE REUNIÓN a partir de mis notas.
+
+REUNIÓN: {{reunion}}
+FECHA: {{fecha}}
+ASISTENTES: {{asistentes}}
+
+NOTAS:
+{{notas}}
+
+FORMATO (Word, una a dos páginas)
+1. Datos de la reunión (tabla de dos columnas)
+2. Temas tratados: viñetas cortas, un tema por viñeta
+3. Decisiones tomadas: lista numerada
+4. Compromisos: tabla con Tarea | Responsable | Fecha
+5. Pendientes o puntos por confirmar: marcados con ⚠
+6. Próxima reunión
+
+REGLAS
+Usa solo lo que aparece en mis notas. Si un responsable o una fecha no se mencionó, escribe «Por definir» y lístalo en pendientes. Lenguaje claro, sin jerga ni relleno.`,
+ tips:['Si grabas la reunión, pega la transcripción en lugar de notas y pide que separe decisiones de discusiones.','Agrega «y un correo de seguimiento de cinco líneas con los compromisos».'],
+ src:'Función de asistente: estructurar actas de reunión'},
+
+{id:'informe-1pg',cat:'docs',t:'Informe ejecutivo de una página',
+ d:'Logros, pendientes, dificultades y próximos pasos en una sola hoja, con cifras reales y sin encuadres de déficit.',
+ out:['Word'],attach:['~Informe o datos base, si son largos'],
+ vars:[T('proyecto','Proyecto o área'),T('periodo','Periodo','2026-2'),A('datos','Información base')],
+ body:`Elabora un INFORME EJECUTIVO DE UNA PÁGINA sobre {{proyecto}} para el periodo {{periodo}}.
+
+INFORMACIÓN BASE:
+{{datos}}
+
+ESTRUCTURA (cabe en una hoja de Word)
+- Logros: 3 a 5 viñetas con cifras reales.
+- Pendientes: con responsable y fecha cuando existan.
+- Dificultades: dichas con claridad y sin dramatismo, cada una con la acción que se está tomando.
+- Próximos pasos: máximo 5, en orden de prioridad.
+
+REGLAS
+- Solo cifras y hechos de la información base; no estimes ni redondees a favor.
+- Nada de encuadres de déficit («faltan X para la meta»): muestra avance y qué sigue.
+- Colores #00205B y #00387B en encabezados; letra legible, sin saturar la hoja.
+- Comprueba que cabe en una página (conviértelo a PDF y revísalo) antes de entregar.`,
+ tips:['Para reportes semestrales con muchos datos, hazlo primero como dashboard (categoría Datos) y deja esta hoja como resumen.'],
+ src:'Función de asistente: informes ejecutivos de una página'},
+
+/* ================= EVENTOS ================= */
+{id:'cronograma-vivo',cat:'eventos',t:'App de cronograma en vivo para un evento (sin login)',
+ d:'Página que muestra en qué momento va el evento y quién responde por cada actividad, con cuenta regresiva y gestión de retrasos desde un archivo.',
+ out:['HTML'],attach:['~Excel con frentes, responsables y contactos'],
+ vars:[T('evento','Evento'),T('fecha','Fecha'),T('lugar','Lugar'),A('programa','Programa (orden y horarios exactos)'),A('frentes','Responsables por frente')],
+ body:`Construye una app web de seguimiento en vivo para {{evento}} ({{fecha}}, {{lugar}}), para que todo el equipo y los invitados vean en qué momento va el evento y quién responde por cada actividad, sin iniciar sesión.
+
+PROGRAMA (orden y horarios exactos):
+{{programa}}
+
+RESPONSABLES Y FRENTES:
+{{frentes}}
+
+FUNCIONES
+- Hora oficial de Colombia (America/Bogota): actividad actual, siguiente y barra de progreso.
+- Cuenta regresiva en el encabezado hasta el inicio; estado «Montaje» el día anterior.
+- Gestión de retraso: la app lee un archivo retraso.json (por ejemplo {"retraso": 12}) cada 20 segundos y corre todo el cronograma esos minutos, mostrando una insignia «Retraso: X min».
+- Simulación para ensayar con parámetros en la URL: ?hora=15:20&retraso=12
+- Interfaz limpia y dinámica, sin pestañas que sobren; metadatos Open Graph para la vista previa en WhatsApp.
+
+ENTREGA
+Un solo archivo index.html listo para subir a GitHub y desplegar en Vercel sin configuración de build. Explícame, paso a paso y sin tecnicismos, cómo crear y editar retraso.json desde el navegador de GitHub.`,
+ tips:['El retraso solo funciona en la versión alojada (GitHub/Vercel), no en la vista previa del chat.','Si no quieres calcular el retraso, avisa «el grupo X empezó a las H:MM» y pide solo el número para pegar.','Si hay una sección protegida (guion del anfitrión), pide guardar solo el hash de la clave, nunca la clave en texto plano; y no publiques claves en el repositorio.','Quita las pestañas que nadie usa: en el Día de la Familia se eliminaron «Equipo» y «Pendientes».'],
+ src:'Festival Solidario de Tunas, Día de la Familia e Inducciones 2026-1 y 2026-2'},
+
+{id:'guion-anfitrion',cat:'eventos',t:'Guion del anfitrión por bloques',
+ d:'Guion para leer en voz alta, con cuatro bloques por participante, tiempos de lectura calculados y solo datos verificados.',
+ out:['Word','HTML'],attach:[],
+ vars:[T('evento','Evento'),A('grupos','Participantes y datos verificados de cada uno'),T('minutos','Duración de cada intervención','50 a 60 segundos')],
+ body:`Escribe el guion del anfitrión para {{evento}}.
+
+PARTICIPANTES Y DATOS VERIFICADOS:
+{{grupos}}
+
+PARA CADA PARTICIPANTE
+Cuatro bloques cortos: Origen · Trayectoria · Hitos · Hoy, más una línea final de llamado a escena. Duración de lectura: {{minutos}} a 140 palabras por minuto.
+
+REGLAS DE ORO
+- Usa SOLO los datos que te di. No inventes logros, años, reconocimientos ni adjetivos de ranking («una de las pocas…», «la más grande…»).
+- Si falta un dato, escribe ⚠ [dato pendiente] en vez de rellenar.
+- Frases pensadas para leerse en voz alta: cortas, con ritmo natural, sin tecnicismos.
+- Incluye una tabla con el tiempo estimado de lectura por bloque.
+- Quita cualquier sección que yo no haya pedido.`,
+ tips:['En eventos reales se detectaron descripciones inventadas y competencias mal nombradas; la regla «solo datos verificados» es la más importante de este prompt.','Si el guion se lee en vivo, pide una vista de «lo que leo ahora» y «lo que sigue», con tamaño de letra ajustable.'],
+ src:'Guiones de Inducciones 2026-2 y del Festival de Tunas'},
+
+{id:'cronograma-festival',cat:'eventos',t:'Cronograma de festival con duraciones y transiciones',
+ d:'Arma el programa hora por hora, con cálculos visibles, reglas de equidad entre géneros o universidades y exportación a Excel.',
+ out:['Excel','Texto'],attach:[],
+ vars:[T('evento','Evento'),T('inicio','Hora de inicio'),T('tope','Hora máxima de cierre'),A('bloques','Bloques y duración de cada uno (incluye transición)'),A('participantes','Universidades o grupos participantes')],
+ body:`Ayúdame a armar el cronograma de {{evento}}.
+
+INICIO: {{inicio}} · CIERRE MÁXIMO: {{tope}}
+
+BLOQUES Y DURACIONES (incluyendo transiciones):
+{{bloques}}
+
+PARTICIPANTES:
+{{participantes}}
+
+ENTREGA
+1. Tabla hora por hora con presentaciones y transiciones.
+2. Cálculo explícito de cada subtotal (por ejemplo, 4 grupos × 20 min = 80 min) y hora de cierre resultante.
+3. Si excede el tope, propón dos ajustes con su efecto en minutos.
+4. Equidad: no favorezcas a un género ni a una universidad; avísame si el número de invitados por bloque es desigual.
+5. Versión para copiar a Excel (CSV) y en texto simple.
+
+Antes de entregar, recalcula todas las sumas y confírmame que lo hiciste.`,
+ tips:['En la práctica se cometieron errores de cuentas simples (4 × 20 no es 100): pide siempre los subtotales visibles.','Para reutilizarlo, pide una herramienta HTML con bloques dinámicos que recalcule en vivo y exporte CSV y JSON; con fondo blanco si es un documento de trabajo interno.'],
+ src:'Festival de danza Sabana Baila / Universidades Bailan por Colombia'},
+
+{id:'carta-invitacion',cat:'eventos',t:'Carta de invitación a universidades + correo breve',
+ d:'Carta formal ya redactada, con saludo genérico para envío masivo, tono cálido y componente solidario voluntario, más un correo breve para acompañarla.',
+ out:['Word','Texto'],attach:['~Membrete institucional, si lo tienes'],
+ vars:[T('fechacarta','Fecha de la carta'),T('invitados','Dirigida a','por ejemplo, las universidades invitadas'),T('evento','Nombre del evento'),T('fecha','Fecha y hora'),T('lugar','Lugar'),A('proposito','En una o dos frases, ¿para qué es el evento?'),T('solidario','Componente solidario (opcional)','por ejemplo, traer alimentos no perecederos como gesto voluntario','',true),T('limite','Confirmar antes de'),T('contacto','Contacto para confirmar','correo o teléfono'),T('firmante','Nombre y cargo de quien firma')],
+ body:`Redacta una carta formal de invitación en Word (.docx) y un correo breve que la acompañe. Parte del texto base y ajusta solo los datos.
+
+TEXTO BASE DE LA CARTA
+Chía, {{fechacarta}}
+
+Señores
+{{invitados}}
+
+Asunto: Invitación a {{evento}}
+
+Cordial saludo.
+
+La Dirección de Bienestar y Experiencia del Estudiante de la Universidad de La Sabana tiene el gusto de invitarlos a {{evento}}, que se realizará el {{fecha}} en {{lugar}}.
+
+{{proposito}} (redáctalo en uno o dos párrafos breves, con calidez, usando solo lo que te di)
+
+Componente solidario: {{solidario}}. Si dice «ninguno», omite este párrafo. Si existe, preséntalo como un gesto voluntario de quienes asistan, nunca como un requisito para las delegaciones.
+
+Les agradecemos confirmar su participación antes del {{limite}} escribiendo a {{contacto}}.
+
+Será un honor contar con su presencia.
+
+Cordialmente,
+
+{{firmante}}
+Dirección de Bienestar y Experiencia del Estudiante
+
+REGLAS PARA LA CARTA
+- Saludo genérico, para envío masivo (no personalizado por institución).
+- Tono cálido y no obligatorio: se invita, no se exige.
+- Una página; datos clave (fecha, hora, lugar) bien visibles; deja un espacio para el logo sin inventarlo.
+- Si falta un dato (por ejemplo, el nombre definitivo del evento o la fecha límite), márcalo con ⚠ en vez de inventarlo.
+
+CORREO QUE ACOMPAÑA LA CARTA
+Cuatro a seis líneas: saludo, presentación de la carta adjunta, datos esenciales y petición de confirmación.`,
+ tips:['Si el evento cambia de nombre o de enfoque, pide también una versión de actualización además del texto original.','Evita frases que suenen a condición («es necesario traer…») en los componentes solidarios.'],
+ src:'Carta a siete universidades para un festival de danza'},
+
+{id:'checklist-evento',cat:'eventos',t:'Lista de tareas de evento: de la planeación a la evaluación',
+ d:'Plan en Excel con fases, responsables, fechas en semanas previas, alertas críticas y hoja de evaluación.',
+ out:['Excel'],attach:['~Excel con el equipo y los roles'],
+ vars:[T('evento','Evento'),T('fecha','Fecha'),T('aforo','Aforo aproximado'),T('grupos','Grupos o actividades involucradas'),A('equipo','Equipo y roles')],
+ body:`Crea la lista de tareas completa para {{evento}} ({{fecha}}), con aproximadamente {{aforo}} participantes.
+
+CONTEXTO: {{grupos}}
+EQUIPO Y ROLES:
+{{equipo}}
+
+ENTREGA (Excel .xlsx)
+- Hoja 1 «Plan»: Fase (Planeación · Convocatoria · Logística · Producción · Día del evento · Cierre y evaluación) | Tarea | Responsable | Fecha límite en semanas antes del evento (T-6, T-4…) | Estado | Notas.
+- Hoja 2 «Alertas»: tareas críticas con dependencia (sonido, permisos, backline, refrigerios, comunicaciones) y qué pasa si se retrasan.
+- Hoja 3 «Evaluación»: indicadores y preguntas para el cierre.
+- Estado con lista desplegable y formato condicional.
+
+Marca con ⚠ lo que dependa de una decisión mía; no asumas presupuestos ni proveedores.`,
+ tips:['Alimenta los frentes y responsables con el Excel del equipo; no dejes que se inventen nombres.','Cada semana puedes pedir: «dame las alertas de lo que vence en 10 días».'],
+ src:'Función de asistente: listas de tareas de evento'},
+
+{id:'solicitud-gr',cat:'eventos',t:'Responder a una solicitud de un grupo representativo para un evento',
+ d:'Respuesta cálida que explica las condiciones para solicitar un grupo (anticipación, sonido, backline, refrigerios). Pensado para Cultura; adaptable a otros equipos.',
+ out:['Texto'],attach:[],
+ vars:[T('solicitante','Quién solicita'),T('evento','Evento y fecha'),T('grupo','Grupo solicitado','por ejemplo, Tuna Femenina')],
+ body:`Redacta la respuesta a una solicitud de un grupo artístico representativo de la Universidad de La Sabana para un evento.
+
+SOLICITANTE: {{solicitante}}
+EVENTO Y FECHA: {{evento}}
+GRUPO SOLICITADO: {{grupo}}
+
+${REF_GRUPOS}
+
+CONDICIONES QUE DEBE EXPLICAR (vigentes según el portafolio de grupos de abril de 2026; confírmalas antes de enviar)
+- La solicitud se hace con mínimo 10 días de anticipación.
+- Pertinencia del evento para el grupo y compromiso mutuo entre quien solicita y los estudiantes.
+- Sonido: se requiere ingeniero de sonido, que tiene costo. Explica qué es el backline y por qué implica gasto. No lo necesitan el Coro, las Tunas ni Repercusión.
+- Refrigerio para los estudiantes que se presentan.
+
+TONO
+Cálido y claro, sin sonar transaccional: celebra que quieran contar con los estudiantes y presenta las condiciones como una forma de cuidar la presentación. Si el grupo solicitado no parece el más adecuado para el evento, sugiere otro de la lista, con delicadeza.
+
+ENTREGA
+Un correo corto (máximo 150 palabras) y una versión para WhatsApp (tres líneas). Si falta algún dato del evento (aforo, escenario, horario), pregúntamelo antes de redactar.`,
+ tips:['Verifica con tu jefatura que las condiciones sigan vigentes: provienen del portafolio de abril de 2026.','Si el solicitante no dio aforo ni escenario, pide primero esos datos en lugar de responder a ciegas.'],
+ src:'Portafolio profesional de los 15 grupos y campaña de correo'}
+
+);
+PROMPTS.push(
+
+/* ================= PRESENTACIONES Y COMITÉS ================= */
+{id:'deck-html',cat:'pres',t:'Presentación HTML interactiva de una sola pantalla',
+ d:'Deck que se construye con cada clic o flecha, con modo presentador, imágenes ampliables, videos incrustados y archivo único que funciona sin internet.',
+ out:['HTML'],attach:['~Imágenes y enlaces de video que quieras incluir'],
+ vars:[T('tema','Tema'),S('publico','Público',['Estudiantes','Docentes y maestros','Directivos y comités','Equipo de Bienestar','Externos']),T('minutos','Duración (minutos)'),A('mensajes','Mensajes clave y contenido')],
+ body:`Construye una presentación HTML interactiva sobre {{tema}} para {{publico}}, de {{minutos}} minutos.
+
+MENSAJES CLAVE Y CONTENIDO:
+{{mensajes}}
+
+COMPORTAMIENTO
+- Una sola pantalla fija: el contenido se construye con cada clic o flecha (nada de scroll largo).
+- Navegación con flechas (←, →, PageUp/PageDown, Inicio/Fin), puntos de progreso y botón Atrás que restaura el estado.
+- Imágenes en base64 con clic para ampliarlas (lightbox). Videos de YouTube incrustados como iframe, no como miniatura ni enlace.
+- Modo presentador con notas en viñetas cortas (las preguntas retóricas empiezan con «?»).
+- Archivo único que funciona sin internet, para auditorios sin conexión.
+
+DISEÑO
+#00205B, #00387B y blanco; Playfair Display + DM Sans; poco texto y mucho aire.
+
+CALIDAD
+- Nada de «borrador» ni texto de relleno visible.
+- Si agregas o quitas diapositivas, actualiza los contadores de navegación y deja una sola diapositiva activa por mazo.
+- Si hay una cifra o una noticia, indica la fuente y no uses nada que yo no pueda verificar.`,
+ tips:['Se descartaron versiones «pasivas» (una persona decide, ramas falsas). Si la dinámica es interactiva, pide decisiones reales con consecuencias.','Con imágenes base64 largas, pide los cambios por script en lugar de buscar y reemplazar a mano.','Cuando te nombren empresas o noticias que no conoces, pide que verifique la fuente antes de incluirlas.'],
+ src:'Jornada de Maestros, taller de Vibe Coding y presentaciones de comité'},
+
+{id:'deck-comite',cat:'pres',t:'Presentación para comité: primero audita la propuesta',
+ d:'Flujo en dos pasos: una auditoría de lo que falta o no cuadra y, solo después, la presentación interactiva con la decisión que se pide.',
+ out:['HTML'],attach:['~La propuesta en Word, si es larga'],
+ vars:[T('comite','Comité y tiempo disponible'),A('propuesta','Propuesta')],
+ body:`Voy a presentar esta propuesta ante {{comite}}. Antes de construir nada, audítala.
+
+PROPUESTA:
+{{propuesta}}
+
+PASO 1 · AUDITORÍA (máximo una página)
+Dime qué falta o no cuadra: cronograma, matemática de cobertura frente a las metas, presupuesto (¿suman los totales?), gobernanza y responsables, indicadores y línea base. Prioriza lo que el comité va a preguntar.
+
+PASO 2 · CONSTRUCCIÓN
+Cuando yo responda a la auditoría, construye la presentación interactiva (HTML) de 12 diapositivas como máximo con: contexto, propuesta, cómo funciona, calendario, presupuesto interactivo, gobernanza y la decisión que se pide al comité.
+
+REGLAS
+- Mensajes en positivo: muestra avance y oportunidad; nada de «faltan X para llegar a la meta».
+- Si un cambio mío tiene un efecto numérico oculto (por ejemplo, quitar un ciclo baja la cobertura del 83 % al 75 %), avísame antes de aplicarlo.
+- Cuando una cifra sea una estimación mía y no un dato investigado, preséntala como estimación de trabajo pendiente de validación.`,
+ tips:['En la propuesta de Reconocimientos, la auditoría detectó metas sin sustento y presupuestos inconsistentes antes de llegar al comité.','Cierra siempre con «lo que necesitamos que el comité decida».'],
+ src:'Sistema de reconocimientos DBEE, Maratón Musical y expedientes'},
+
+{id:'defensa-comite',cat:'pres',t:'Preguntas difíciles del comité: defender una cifra con honestidad',
+ d:'Prepara respuestas a las preguntas probables sobre una cifra estimada sin fingir un respaldo que no existe.',
+ out:['Texto'],attach:[],
+ vars:[T('cifra','Cifra o decisión a defender'),A('origen','Cómo la estimaste (con honestidad)'),T('comite','Ante quién')],
+ body:`Voy a defender ante {{comite}} esta cifra o decisión: {{cifra}}.
+
+CÓMO LA ESTIMÉ:
+{{origen}}
+
+AYÚDAME A PREPARARME
+1. ¿Qué preguntas difíciles me harían? (Máximo cinco, ordenadas por probabilidad.)
+2. Para cada una, una respuesta corta y honesta que NO finja un respaldo que no existe.
+3. Busca referencias externas (benchmarks, estudios) y dime con franqueza si validan o no mi cifra; si no la validan, no las fuerces.
+4. Dame dos opciones de encuadre: (a) anclar la cifra a la capacidad real del presupuesto del área; (b) presentarla como estimación de trabajo pendiente de validación por el área responsable.
+5. Propón de tres a cinco indicadores para medir el resultado y señala si falta una línea base.
+
+Respuestas en viñetas, tono sereno.`,
+ tips:['No pidas argumentos para «blindar» una cifra: pide la forma honesta de defenderla.','Ofrece alternativas de redacción en lugar de imponer una sola.'],
+ src:'Justificación de montos de bonificación en el sistema de reconocimientos'},
+
+/* ================= ACTIVACIONES Y TALLERES ================= */
+{id:'stand-arquetipos',cat:'activ',t:'Activación de feria o stand con test de arquetipos',
+ d:'Sistema completo: test tipo Buzzfeed, cartas coleccionables, dashboard para pantalla grande, pantalla de atracción con QR y versión de revisión para psicología.',
+ out:['HTML','Texto'],attach:['~El QR de tu test en PNG, si ya lo tienes'],
+ vars:[T('evento','Evento o feria'),T('publico','Público','por ejemplo, aspirantes de último año de colegio'),A('servicios','Servicios y datos verificados','',`Áreas de la DBEE: Prevención y Salud · CREA (éxito académico) · Cultura · Deportes · Fondo de Estudiantes · PAT (Programa Aprendamos a Trabajar). Servicios vinculados: Cursos Libres, CAF (Centro de Acondicionamiento Físico) y Misión Sabana. Concepto de comunicación: #ExperienciaBienestar. Agrega aquí los datos verificados de cada servicio (cifras, horarios, requisitos).`),A('arquetipos','Arquetipos','',`Alma Creativa · Competidor Nato · Eterno Aprendiz · Corazón que Transforma · Conector Social · Gran Explorador`)],
+ body:`Diseña una activación de feria para {{evento}} dirigida a {{publico}}, con la idea: «En vez de explicar Bienestar, hacemos que la gente lo viva».
+
+SERVICIOS Y DATOS VERIFICADOS:
+{{servicios}}
+
+ARQUETIPOS (puedes proponer ajustes, pero parte de estos):
+{{arquetipos}}
+
+ENTREGABLES
+1. Test tipo Buzzfeed (ocho preguntas) que asigna un arquetipo; cada opción de respuesta muestra un dato institucional verificable relacionado con ESA respuesta (no con la pregunta).
+2. Carta coleccionable por arquetipo (estilo FIFA/Pokémon) con barras de atributos y los servicios que le corresponden.
+3. Dashboard para pantalla grande: un clic registra cada resultado, gráfico en vivo y rotación de información de servicios.
+4. Pantalla de atracción con QR: animada, a pantalla completa y sin que se apague la pantalla.
+5. Versión de revisión para el equipo de psicología, con el peso de cada respuesta y un campo de comentarios por opción.
+
+DISEÑO
+Colores #00205B, #00387B y blanco; tipografías Outfit y DM Sans.
+
+REGLAS
+- Cero estadísticas inventadas; si no hay dato, no hay dato: dímelo y no lo rellenes.
+- Archivos HTML autocontenidos que funcionen sin internet en el computador del stand (los celulares de los visitantes sí necesitan conexión).
+- Escribe «DBEE», no «BEE».`,
+ tips:['Pide el texto de impresión (cartas, pendón) por separado y valida los datos con tu equipo antes de imprimir.','Un dato mostrado según la respuesta elegida engancha más que uno atado a la pregunta.','Se corrigieron estadísticas inventadas: reemplázalas por hechos institucionales verificables.'],
+ src:'Stand en Barranquilla y feria para estudiantes de primer ingreso'},
+
+{id:'historia-interactiva',cat:'activ',t:'Juego de decisiones tipo Bandersnatch para dar a conocer servicios',
+ d:'Historia interactiva con decisiones reales, votación grupal, personajes, finales distintos y servicios integrados a la narrativa.',
+ out:['HTML'],attach:[],
+ vars:[T('publico','Público','por ejemplo, aspirantes de último año de colegio'),T('duracion','Duración','30 minutos'),A('areas','Áreas y servicios a mostrar (solo los que confirmes)')],
+ body:`Crea un juego de decisiones tipo Bandersnatch para dar a conocer servicios universitarios a {{publico}}, en {{duracion}}.
+
+ÁREAS Y SERVICIOS (solo los que yo confirme):
+{{areas}}
+
+DISEÑO
+- Decisiones reales con consecuencias reales: rutas diferentes y finales distintos. Sin ramas falsas ni decisiones sin impacto.
+- Votación grupal para grupos de 15 a 50 personas; decisiones rápidas (sin mecánica de deliberación).
+- Personajes seleccionables con estadísticas iniciales propias, HUD tipo arcade y una pantalla de consecuencia entre cada voto.
+- Los servicios aparecen dentro de la historia, no como paneles estáticos. Un estudiante invitado puede aparecer como personaje de la historia.
+- Temporizador de esquina que indica qué área habla y cuánto tiempo le queda.
+- Botón Atrás que restaura el estado completo.
+
+ARCHIVO
+Un solo HTML autocontenido que funcione sin internet (auditorio).
+
+REGLAS
+Usa solo nombres oficiales de programas y servicios. Si un programa está inactivo o no estás seguro de su estado, pregúntame en lugar de incluirlo. No dejes ninguna mención a «borrador».`,
+ tips:['Se corrigió una etiqueta inventada («Kit de aterrizaje»): usa las categorías oficiales que aparecen en los documentos.','Prueba con cinco personas del equipo antes del evento y ajusta las decisiones que toman demasiado tiempo.'],
+ src:'UniSabana Modo Historia (presentación a aspirantes)'},
+
+{id:'taller-mapa',cat:'activ',t:'Taller de mapeo de servicios entre jefaturas',
+ d:'Diseño de un taller para identificar traslapes, rutas compartidas y vacíos, con personas tipo, «hilos», «corchetes» y marcas diagnósticas.',
+ out:['HTML','Texto'],attach:['~Catálogo de servicios por jefatura, si existe'],
+ vars:[T('jefaturas','Jefaturas participantes','','Cultura, Deporte, Becarios, CREA, Centro Médico y Experiencia del Estudiante'),T('duracion','Duración','','4,5 horas'),T('personas','Quiénes participan','por ejemplo, unas 15 personas de los equipos de las seis jefaturas')],
+ body:`Diseña un taller de {{duracion}} para mapear los servicios que ofrecen {{jefaturas}} a estudiantes de pregrado e identificar traslapes, rutas compartidas y puntos de conexión. Participan {{personas}}.
+
+MODELO CONCEPTUAL
+- Línea de tiempo en macroetapas (por ejemplo, primer año, trayectoria media y cierre de carrera), subdivididas por semestre; la admisión queda fuera.
+- Personas tipo (pregrado): foráneo de primer semestre, estudiante en riesgo académico, estudiante de grupo representativo y estudiante ejemplar.
+- «Hilo»: recorrido de una persona a lo largo del tiempo y de las jefaturas. «Corchete»: servicios similares de distintas jefaturas, sin importar el tiempo (posible duplicidad).
+- Tipos de tarjeta: lineal (horario fijo), evento disparado (se activa por una señal) y ciclo recurrente (se repite cada semestre).
+- Marcas diagnósticas explicadas en lenguaje simple: vacío, sobrecarga, huérfano y valor.
+
+ENTREGABLES
+1. Simulación paso a paso del taller en una sola pantalla (Anterior/Siguiente), con checklist previo y agenda de la jornada.
+2. Una demo «de visión» (red animada con IA y respaldo local) para abrir la reunión y elevar la ambición.
+3. Guion del facilitador.
+
+Aclara que los datos de las demos son ilustrativos y no un inventario real.`,
+ tips:['Se descartó el esquema de seis «momentos de transición» por poco convincente; el modelo por macroetapas funcionó mejor.','La demo se presenta como el «a dónde queremos llegar»; el taller es el «cómo recogemos los datos».','No dejes marcas diagnósticas sin explicación: pide que cada una se explique con un clic.'],
+ src:'Taller de mapeo de servicios entre las seis jefaturas de la DBEE'},
+
+{id:'sesion-colaborativa',cat:'activ',t:'App colaborativa para una sesión en vivo (QR, sin login)',
+ d:'Herramienta para que un grupo construya algo en conjunto desde el celular y un facilitador lo ordene y exporte a PDF y Excel.',
+ out:['HTML','Excel','PDF'],attach:['Excel con el catálogo o base de trabajo'],
+ vars:[T('objetivo','Objetivo de la sesión'),T('participantes','Número de participantes'),T('catalogo','Base de trabajo','nombre del Excel')],
+ body:`Diseña una herramienta web para una sesión colaborativa de {{participantes}} personas cuyo objetivo es: {{objetivo}}.
+
+BASE DE TRABAJO: {{catalogo}}
+
+REQUISITOS
+- Fases controladas por el facilitador: Preparar (QR y sala de espera), Propuestas (ronda con tiempo), Debate (arrastrar y ordenar) y Cierre (exportar PDF y Excel).
+- Los participantes entran por QR desde el celular, sin cuenta ni contraseña; vista móvil con pestañas.
+- Solo el facilitador puede editar; deshacer con Ctrl+Z.
+- Sincronización en tiempo real con una base en la nube y, si falla, respaldo local para que la sesión no se detenga.
+- Botón de simulación para probar sin participantes reales.
+- Interfaz «a prueba de tontos» y moderna.
+
+ANTES DE CONSTRUIR
+Analiza el archivo y avísame de problemas (duplicados, campos vacíos, filas que no aplican). Yo confirmo qué filtrar.`,
+ tips:['Antes de construir se detectó que de 425 filas solo 260 eran de tipo «Formación»: revisar el archivo primero ahorra retrabajo.','Prueba con la simulación y con dos celulares antes del día de la sesión.'],
+ src:'Sistema de rutas de formación tipo metro'},
+
+{id:'actividad-artistica',cat:'activ',t:'Diseñar y presentar una actividad artística con respaldo científico',
+ d:'De la idea al flujo de la sesión, resultados esperados, medición y una presentación breve; con referencias reales y límites explicados.',
+ out:['HTML','PowerPoint'],attach:['~Fotos de referencia','~Cotizaciones o costos reales'],
+ vars:[T('tema','Tema o propósito'),T('aforo','Participantes'),T('aliados','Aliados','por ejemplo, Centro Médico'),A('materiales','Lo que ya está definido (materiales, costos, maestros)')],
+ body:`Ayúdame a diseñar y presentar una actividad artística sobre {{tema}}, para {{aforo}} participantes, en alianza con {{aliados}}.
+
+LO QUE YA TENGO DEFINIDO:
+{{materiales}}
+
+ENTREGA
+1. Dos o tres conceptos de actividad y nombres posibles; yo elijo.
+2. Con el concepto elegido: flujo de la sesión paso a paso, resultados esperados (durante, después y a largo plazo) y cómo se medirán (por ejemplo, una escala de 1 a 5 al entrar y al salir).
+3. Presentación breve de cinco diapositivas: portada con ambas áreas, flujo con respaldo científico, resultados esperados, recursos y costos, y referencias visuales.
+
+REGLAS PARA EL RESPALDO CIENTÍFICO
+- Cita estudios reales y revisables. Aclara si respaldan cada momento por separado o la combinación completa (casi nunca la combinación).
+- Si un metaanálisis tiene advertencias de calidad metodológica, dilo.
+- Marca con ⚠ lo pendiente: fecha, salón, créditos de las imágenes de referencia y la ruta de apoyo con el aliado.
+- Usa solo los costos que yo te di.`,
+ tips:['Dos sesiones de 22 personas resultaron más viables que una de 40.','Verifica la autoría de las imágenes de referencia antes de difundir.','Un buen nombre cambia la propuesta: pide alternativas y escoge.'],
+ src:'Propuesta «Sentir en Color» para el Día de la Salud Mental'},
+
+/* ================= DATOS Y DASHBOARDS ================= */
+{id:'dash-informe',cat:'datos',t:'Informe en Word → dashboard HTML interactivo',
+ d:'Convierte un informe de gestión en un tablero con secciones claras, gráficos y paleta institucional.',
+ out:['HTML'],attach:['El informe en Word'],
+ vars:[T('area','Área o coordinación'),T('periodo','Periodo','2026-1'),T('secciones','Secciones que debe tener (opcional)')],
+ body:`Convierte el informe adjunto en un dashboard HTML interactivo para {{area}}, periodo {{periodo}}.
+
+SECCIONES PEDIDAS: {{secciones}}
+
+DISEÑO
+- Un solo archivo HTML (Chart.js y fuentes por CDN), responsive y listo para imprimir.
+- Pestañas claras; secciones separadas con divisores y títulos; jerarquía que se lea rápido.
+- Paleta #00205B / #00387B / blanco; Playfair Display + DM Sans. Una portada de navegación (hub) en lugar de un resumen saturado.
+
+CONTENIDO
+- Todas las cifras exactas del informe; el nombre correcto de la unidad y de quien coordina (confírmalos conmigo).
+- Si algo del informe es ambiguo, pregúntame antes de graficarlo.
+
+TÉCNICA (para evitar errores conocidos)
+- Define las funciones de navegación en el <head>, antes de que el HTML las invoque.
+- Dibuja los gráficos solo cuando su pestaña es visible; no sobre canvas ocultos.
+- Llena tablas y listas al cargar la página; deja los gráficos en una función aparte.
+- Revisa que no queden comentarios HTML rotos que se vean como texto.`,
+ tips:['La primera versión se vio desorganizada: pide secciones con divisores desde el inicio.','Se detectó un error en el nombre de una unidad (Coordinación Musical vs. Cultural): revisa los títulos.','Si un informe viene de otra área, pide que cite al coordinador responsable.'],
+ src:'Dashboards de Coordinación Musical, Comunicaciones DBEE y Desarrollo Cultural 2026-1'},
+
+{id:'dash-excel',cat:'datos',t:'Base en Excel → visualización interactiva (con mapa)',
+ d:'Primero perfila los datos y reporta problemas; después construye un tablero con filtros cruzados y protege la información personal.',
+ out:['HTML'],attach:['El Excel con los datos'],
+ vars:[T('base','Nombre de la base'),A('preguntas','Qué quieres descubrir')],
+ body:`Analiza la base de datos adjunta ({{base}}) y construye una visualización interactiva.
+
+QUÉ QUIERO DESCUBRIR:
+{{preguntas}}
+
+PASO 1 · PERFIL DE DATOS (antes de graficar)
+Cuéntame: filas y columnas, duplicados, valores vacíos o en cero, nombres ambiguos (por ejemplo, municipios que existen en varios departamentos) y cualquier columna con datos personales. Propón cómo tratar cada caso.
+
+PASO 2 · VISUALIZACIÓN
+- HTML autocontenido con filtros cruzados entre gráficos.
+- Mapa de Colombia cuando haya datos geográficos (animaciones sobrias; vistas de calor y burbujas).
+- Estética dinámica pero clara: «el mejor censo que se haya visto».
+- Textos de hallazgos generados automáticamente a partir de los datos.
+
+REGLAS DE PRIVACIDAD
+- No incluyas nombres, correos, teléfonos, documentos ni códigos de estudiante en el archivo publicado; verifícalo con una revisión automática y dímelo.
+- Los grupos muy pequeños (menos de cinco personas) se muestran agrupados.
+
+PRUEBAS
+Si no puedes abrir la página en un navegador real, dímelo de forma explícita. Revisa que ningún elemento reutilice nombres de clase CSS de otro componente.`,
+ tips:['Un error real: dos componentes compartían la clase «bar» y las columnas se veían como bloques sólidos. Pide nombres de clase únicos.','Los datos con identificadores personales no van a una página publicada: sube solo agregados.','Pide que las advertencias de calidad (duplicados, vacíos, ambiguos) queden listadas al final del tablero.'],
+ src:'Caracterización de estudiantes foráneos (925 estudiantes únicos)'},
+
+{id:'excel-grupos',cat:'datos',t:'Cuadro en Excel para reporte de grupos',
+ d:'Libro de Excel con datos validados, resumen con fórmulas, gráficos y hoja de notas con la fuente de cada dato.',
+ out:['Excel'],attach:['~Datos base del periodo en Excel'],
+ vars:[T('grupos','Grupos o población a reportar'),T('periodo','Periodo'),A('columnas','Columnas o información que debe llevar')],
+ body:`Crea un libro de Excel para el reporte de {{grupos}} del periodo {{periodo}}.
+
+COLUMNAS / INFORMACIÓN QUE DEBE LLEVAR:
+{{columnas}}
+
+HOJAS
+1. Datos: una fila por grupo o por estudiante, con validación de datos (listas desplegables).
+2. Resumen: totales, promedios y comparación con la meta mediante fórmulas (no valores pegados).
+3. Gráficos: los dos o tres que mejor cuenten la historia.
+4. Notas: fuente de cada dato y fecha de corte.
+
+FORMATO
+Encabezados en #00205B con texto blanco, filas alternadas en azul muy claro, columnas con ancho ajustado y filas congeladas. Hoja lista para pegar en PowerPoint o Teams.
+
+Antes de entregar, revisa que las fórmulas no devuelvan errores y que los totales coincidan con los datos.`,
+ tips:['Si el archivo trae datos de estudiantes, protégelo y evita códigos o documentos salvo que sea indispensable.','La hoja de Notas con la fuente ahorra discusiones en comité.'],
+ src:'Función de asistente: cuadros en Excel para reportes de grupos'},
+
+{id:'analisis-hix',cat:'datos',t:'Análisis de alineación con UniSabana Xperience y HIX',
+ d:'Evalúa cómo una unidad o grupo contribuye a los rasgos de Xperience y cumple los ocho elementos de calidad HIX, con acciones para cerrar brechas.',
+ out:['HTML','Excel','Word'],attach:['Tu tabla de actividades o evaluación (Excel), o pégala en el campo'],
+ vars:[T('unidad','Unidad, jefatura o grupo'),A('tabla','Información: pega aquí tu tabla de actividades o evaluación')],
+ body:`Analiza la alineación de {{unidad}} con UniSabana Xperience y con las Experiencias de Alto Impacto (HIX).
+
+INFORMACIÓN DE LA UNIDAD:
+{{tabla}}
+
+${REF_XPERIENCE}
+
+ENTREGA
+1. Cómo contribuye {{unidad}} a los rasgos donde más aporta (Actitud Humanizadora y Conexión con el Entorno), con ejemplos tomados de la información.
+2. Estado de cada uno de los ocho elementos HIX (barras o semáforo) y cuántas actividades lo cumplen.
+3. Cuatro acciones concretas para cerrar brechas.
+4. Aclaración explícita: no todas las actividades o grupos tienen que ser HIX.
+
+REGLAS
+Escribe «UniSabana Xperience». Si algo no está en la información, no lo supongas: dime qué falta.`,
+ tips:['El marco de Xperience y los ocho elementos HIX ya vienen dentro del prompt; solo aportas tu tabla.','Sirve para repetir el mismo análisis en otras jefaturas con su propia tabla.'],
+ src:'Dashboard de Desarrollo Cultural 2026-1 (sección Xperience y HIX)'}
+
+);
+PROMPTS.push(
+
+/* ================= INVESTIGACIÓN Y EVIDENCIA ================= */
+{id:'revision-literatura',cat:'invest',t:'Revisión de literatura con hipótesis (veredicto por hipótesis)',
+ d:'Revisión científica rigurosa que valida o rechaza hipótesis con evidencia revisada por pares y una evaluación honesta de la calidad.',
+ out:['Texto','Word'],attach:[],
+ vars:[A('pregunta','Preguntas guía'),A('hipotesis','Hipótesis a validar o rechazar','H1 … H2 … H3 …'),T('poblacion','Población','estudiantes de pregrado'),T('periodo','Periodo principal','2021–2026'),T('enfasis','Énfasis geográfico','internacional, con énfasis en América Latina')],
+ body:`Realiza una revisión rigurosa de literatura científica sobre:
+
+PREGUNTAS GUÍA:
+{{pregunta}}
+
+HIPÓTESIS A VALIDAR O RECHAZAR:
+{{hipotesis}}
+
+ALCANCE
+- Población: {{poblacion}}
+- Periodo principal: {{periodo}} (incluye trabajos seminales)
+- Bases: Scopus, Web of Science, ERIC, PsycINFO, PubMed, SciELO
+- Énfasis geográfico: {{enfasis}}
+- Solo artículos revisados por pares y fuentes verificables.
+
+ENTREGA (en español)
+1. Veredicto por hipótesis (validada, parcialmente validada o no validada) con el nivel de evidencia.
+2. Marcos teóricos relevantes.
+3. Calidad de la evidencia: sesgos, autoselección, tamaños de muestra.
+4. Qué tipo de experiencia o característica marca la diferencia.
+5. Evaluación honesta de la evidencia latinoamericana, incluyendo resultados nulos.
+6. Recomendaciones prácticas por etapas.
+7. Referencias completas.
+
+REGLAS
+Distingue con claridad qué es hallazgo, qué es inferencia tuya y qué no pudiste verificar. Si no encuentras una fuente, dilo; no la inventes.`,
+ tips:['Después puedes pedir un deck de 12 diapositivas con los veredictos y una explicación de r, d y n para el equipo.','En la revisión de participación cultural y éxito académico las tres hipótesis quedaron «parcialmente validadas»; ese también es un resultado útil.'],
+ src:'Revisión: participación cultural y éxito académico universitario'},
+
+{id:'benchmark',cat:'invest',t:'Benchmark entre universidades con Deep Research (secuencia de tres prompts)',
+ d:'Diseña una secuencia panorama → profundidad → vacíos para investigar qué hacen otras universidades y la consolida en un diagnóstico en Word.',
+ out:['Word','Texto'],attach:['~Más adelante: los resultados de cada fase de Deep Research'],
+ vars:[T('tema','Tema a investigar','becas e incentivos para grupos representativos'),T('universidades','Tipo de universidades'),T('pais','País o región')],
+ body:`Voy a hacer un benchmark sobre {{tema}} en {{universidades}} de {{pais}}. Diseña una secuencia de tres prompts para una herramienta de Deep Research (sin enlaces; la herramienta busca sus propias fuentes).
+
+PROMPT 1 · PANORAMA
+Mapear qué universidades tienen programas de {{tema}}, por categoría (no solo por universidad), con tipo de apoyo y cobertura aproximada.
+
+PROMPT 2 · PROFUNDIDAD
+Qué beneficios se ofrecen realmente: monetarios y no monetarios, a quiénes cubren, cómo se financian, criterios de selección y sostenibilidad.
+
+PROMPT 3 · VACÍOS
+Universidades privadas de referencia que no aparecieron en las dos primeras búsquedas (te daré la lista).
+
+DESPUÉS
+Cuando te suba los resultados de cada fase, analízalos, dime qué huecos hay y ajusta el siguiente prompt. Al final, consolídalos en un diagnóstico en Word para circulación interna: tabla comparativa maestra, matriz de beneficios no monetarios, familias de modelos con ventajas y desventajas, referentes destacados, brechas y próximos pasos. Solo diagnóstico; todavía no propongas un modelo.`,
+ tips:['El primer documento fue débil porque no detallaba qué ofrecen realmente los otros: exige «qué beneficios reales» desde el segundo prompt.','Una herramienta sirvió para amplitud de fuentes y otra para informes estructurados; combínalas.','Los referentes más sólidos fueron los que publican su normativa (decretos, reglamentos).'],
+ src:'Becas e incentivos para grupos representativos (diagnóstico de 19 instituciones)'},
+
+{id:'tabla-1hoja',cat:'invest',t:'Comparación en una hoja de Word (conclusión en negrilla + explicación)',
+ d:'Investiga y compara instituciones en una tabla que cabe en una página, con conclusión clara al inicio de cada celda y lista honesta de fuentes.',
+ out:['Word'],attach:[],
+ vars:[T('entidades','Instituciones a comparar'),T('conceptos','Conceptos a comparar'),T('audiencia','Para quién es','por ejemplo, toda el área de Bienestar'),T('limite','Límite de extensión','una hoja de Word'),A('ref','Tu documento de referencia para contrastar (opcional): pega aquí el texto','','',true)],
+ body:`Investiga y compara {{entidades}} en estos conceptos: {{conceptos}}.
+
+PARA QUIÉN: {{audiencia}} (sin conclusiones atadas a programas de una sola área).
+LÍMITE: {{limite}}
+
+MI DOCUMENTO DE REFERENCIA (para contrastar):
+{{ref}}
+Si dice «ninguno», compara solo entre las instituciones.
+
+FORMATO
+- Tabla en Word con colores institucionales (#00205B, #00387B, blanco).
+- En cada celda: primero una conclusión de una línea en negrilla; luego la explicación breve.
+- Si hay terminología en otro idioma, deja la conclusión en español y el término original entre paréntesis.
+
+FUENTES
+- Prioriza fuentes primarias de cada institución (sus sitios y documentos oficiales).
+- Al final, lista todas las fuentes y distingue cuáles leíste completas y cuáles solo viste como fragmentos de búsqueda. Si un documento estaba bloqueado, dilo.
+- Cierra con una mini-conclusión de «aporte o contraste» por institución, de máximo dos párrafos.
+
+Verifica que el Word quepa en el límite (conviértelo a PDF y revísalo) antes de entregarlo.`,
+ tips:['La versión que funcionó empezó cada celda con la conclusión en negrilla, porque el concepto central a veces era confuso.','Algunas páginas de políticas en PDF bloquean la lectura automática: pide siempre la lista de fuentes con su nivel de lectura.','Si algo no se pudo rastrear a una fuente, que lo diga en lugar de dejarlo.'],
+ src:'Referentes de éxito académico (Oxford y EAFIT) frente a los lineamientos de La Sabana'},
+
+{id:'marco-teorico',cat:'invest',t:'Marco teórico conciso con analogía de entrada',
+ d:'Redacta un marco teórico claro basado en el Modelo de Bienestar Institucional (incluido en el prompt), usando una analogía solo como gancho inicial.',
+ out:['Word'],attach:[],
+ vars:[T('tema','Tema'),T('analogia','Analogía de entrada (opcional)','','',true),T('secciones','Secciones que debe tener'),T('extension','Extensión','por ejemplo, 800 palabras'),A('fuente','Otras fuentes que quieras sumar (opcional): pega aquí el texto','','',true)],
+ body:`Redacta un marco teórico conciso y claro sobre {{tema}}.
+
+FUENTE PRINCIPAL
+${REF_MODELO}
+
+OTRAS FUENTES QUE PEGO:
+{{fuente}}
+
+ANALOGÍA DE ENTRADA: {{analogia}}
+SECCIONES: {{secciones}}
+EXTENSIÓN: {{extension}}
+
+REGLAS
+- Usa la analogía (si hay) solo como gancho narrativo en la introducción; el desarrollo es académico, profesional y sin adornos.
+- Basa cada afirmación en las fuentes de arriba; no importes definiciones externas sin decírmelo.
+- Cierra con tres preguntas validadoras que sirvan para evaluar cualquier propuesta nueva frente al modelo.
+- Vocabulario institucional: «habilidades humanas», «UniSabana Xperience».`,
+ tips:['Después puedes pedir la versión en Word institucional o ajustar el tono sección por sección.'],
+ src:'Marco teórico del modelo de bienestar institucional'},
+
+{id:'argumento-institucional',cat:'invest',t:'Argumentar una postura con los documentos institucionales',
+ d:'Construye un argumento sólido anclado en el Modelo de Bienestar y en UniSabana Xperience (incluidos en el prompt), más un mensaje colegial para el equipo.',
+ out:['Texto'],attach:[],
+ vars:[A('tesis','Tu tesis o postura'),T('canal','Canal del mensaje','chat del equipo, correo, reunión')],
+ body:`Quiero sostener esta tesis ante mi equipo: {{tesis}}
+
+DOCUMENTOS DE RESPALDO (úsalos como única base institucional)
+${REF_MODELO}
+
+${REF_XPERIENCE}
+
+TAREA
+1. Construye el argumento usando SOLO lo que dicen los documentos de arriba; indica de cuál proviene cada idea.
+2. Señala el riesgo conceptual de no usar el término o enfoque que propongo.
+3. Redacta un mensaje para {{canal}}: directo, sustantivo y colegial; sin tono de reclamo.
+4. Dame una versión corta (cinco líneas) y una de un párrafo.
+
+Si los documentos no respaldan algo de mi tesis, dímelo con claridad en lugar de forzarlo.`,
+ tips:['Funcionó para defender «habilidades humanas» frente a «habilidades para la vida»: el arte es un fin formativo, no solo un medio instrumental.','Si tu tesis depende de otro documento (por ejemplo, el PEI), pega el fragmento relevante en la tesis.'],
+ src:'Posicionamiento del arte en el modelo de éxito académico'},
+
+/* ================= COMUNICACIÓN ================= */
+{id:'email-outlook',cat:'comu',t:'Correo HTML compatible con Outlook',
+ d:'Correo con tablas y CSS en línea que sobrevive al motor de Outlook (escritorio y móvil), con imágenes sin deformar.',
+ out:['HTML'],attach:['~Ilustración o imagen, si la vas a incluir'],
+ vars:[T('asunto','Propósito del correo'),A('texto','Texto aprobado (pégalo tal cual)'),T('enlaces','Enlaces que irán como marcadores','portafolio, agendamiento…')],
+ body:`Crea un correo HTML compatible con Outlook (escritorio y móvil) para: {{asunto}}.
+
+TEXTO APROBADO (no lo reescribas ni lo acortes):
+{{texto}}
+
+ENLACES (déjalos como marcadores entre corchetes, por ejemplo [ENLACE_PORTAFOLIO]): {{enlaces}}
+
+TÉCNICA
+- Estructura de tablas con CSS en línea; ancho de 600.
+- Tamaños de fuente en pt, con mso-line-height-rule:exactly y spans anidados para que sobrevivan al motor de Outlook.
+- Georgia para titulares y Arial para el cuerpo; colores #00205B, #00387B y blanco.
+- Imágenes: width="600", sin atributo height y con style="width:100%;max-width:100%;height:auto;". No recortes las ilustraciones que yo suba; incrústalas en base64.
+- Hashtags y encabezados exactamente como los escribí.
+
+ENTREGA
+Archivo HTML y cinco opciones de asunto (con y sin emoji) para que yo escoja.`,
+ tips:['Si en Outlook móvil la imagen se deforma, es por el atributo height: quítalo.','Los marcadores de enlaces se reemplazan al final; deja una lista de cuáles faltan.','Envía una prueba a tu celular antes de la difusión.'],
+ src:'Campaña de correo de los 15 grupos (ocho versiones)'},
+
+{id:'kit-correos',cat:'comu',t:'Kit de correos: invitación, confirmación, recordatorio y agradecimiento',
+ d:'Cuatro correos con tono institucional listos para guardar como plantillas en Outlook.',
+ out:['Texto'],attach:[],
+ vars:[T('evento','Evento'),T('publico','Público'),A('datos','Datos clave (fecha, hora, lugar, enlace)'),T('contacto','Firma y contacto')],
+ body:`Prepara un kit de cuatro correos para {{evento}}, dirigido a {{publico}}.
+
+DATOS CLAVE:
+{{datos}}
+
+CORREOS
+1. Invitación: gancho + datos + una sola llamada a la acción.
+2. Confirmación: qué sigue, qué llevar y a quién escribir.
+3. Recordatorio (24 horas antes): tres líneas.
+4. Agradecimiento: cercano, con un resultado concreto y el siguiente paso.
+
+REGLAS
+- Cercano, profesional, inspirador; nunca burocrático.
+- Cada correo con asunto, saludo, cuerpo y firma de {{contacto}}.
+- Ajusta el tono al público (estudiantes: más directo; directivos: más sintético).
+- Marca con ⚠ lo que falte.`,
+ tips:['Guárdalos en Outlook como plantillas para reutilizarlos en cada evento.'],
+ src:'Función de asistente: plantillas de invitación, confirmación y agradecimiento'},
+
+{id:'comunicado',cat:'comu',t:'Comunicado interno o externo con tono UniSabana',
+ d:'Mensajes adaptados al público (estudiantes, docentes, directivos o externos), en dos versiones etiquetadas.',
+ out:['Texto'],attach:[],
+ vars:[S('audiencia','Audiencia',['Estudiantes','Docentes y maestros','Directivos','Externos y aliados']),T('canal','Canal','correo, Teams, WhatsApp, redes'),A('mensaje','Mensaje central'),T('extension','Extensión','por ejemplo, máximo 120 palabras')],
+ body:`Redacta un comunicado para {{audiencia}} por {{canal}}.
+
+MENSAJE CENTRAL:
+{{mensaje}}
+
+REGLAS DE TONO
+- Cercano, profesional e inspirador; nunca burocrático.
+- Frases cortas, voz activa y lo importante primero.
+- Vocabulario: «habilidades humanas», «UniSabana Xperience».
+- Extensión: {{extension}}.
+- Sin presiones: invita en lugar de exigir.
+
+ENTREGA
+Dos versiones etiquetadas (más cercana / más institucional) y una recomendación breve de cuál usar y por qué.`,
+ tips:['Pedir versiones etiquetadas te permite escoger sin pedir reescrituras sucesivas.'],
+ src:'Función de asistente: apoyo en comunicación'},
+
+{id:'bases-concurso',cat:'comu',t:'Bases de un concurso institucional + brief gráfico + invitación a jurados',
+ d:'Paquete completo para lanzar un concurso: bases, brief de diseño, copy, texto del formulario y correo a jurados, con criterios simples.',
+ out:['Word','Texto'],attach:[],
+ vars:[T('nombre','Nombre del concurso'),T('tema','Tema'),T('publico','Quiénes participan','por ejemplo, estudiantes de pregrado y posgrado'),T('formato','Formato de participación'),A('fechas','Fechas clave (lanzamiento, cierre, evaluación, premiación)'),A('criterios','Criterios de evaluación'),T('premios','Premios','o «por definir»')],
+ body:`Diseña las bases de un concurso institucional de la Universidad de La Sabana: {{nombre}}.
+
+TEMA: {{tema}}
+PARTICIPAN: {{publico}}
+FORMATO DE PARTICIPACIÓN: {{formato}}
+FECHAS: {{fechas}}
+CRITERIOS: {{criterios}}
+PREMIOS: {{premios}}
+
+ENTREGABLES
+1. Bases del concurso en Word, con estas secciones: objeto, quiénes participan, cómo participar, criterios y ponderación, jurado, premios, cronograma, propiedad intelectual y tratamiento de datos personales.
+2. Brief para el equipo de diseño de la pieza gráfica.
+3. Texto del post y copy para redes.
+4. Descripción y criterios para el formulario de inscripción.
+5. Plantilla de correo de invitación a jurados.
+
+PRINCIPIOS
+- Simplicidad: pocos criterios (tres bastan), pesos fáciles de explicar y bonificación plana si hay un requisito de publicación.
+- No puntúes la calidad técnica si quieres abrir la participación a cualquiera.
+- Si el formato de los premios no está decidido, déjalo pendiente con ⚠.
+- Si participa en redes, documenta dos caminos: publicar con un hashtag y perfil público, o entregar el archivo directamente.
+- Los premios y el presupuesto no se inventan: usa solo los que te di.`,
+ tips:['En Sabana Shorts se simplificó una fórmula de percentiles a una bonificación plana del 10 % y los criterios de cinco a tres: empieza por lo simple.','Si tienes las bases de un concurso anterior, pégalas en «criterios» o pide que las tome como referente de estructura.'],
+ src:'Sabana Shorts 2026 (bases, brief, formulario y jurados)'},
+
+{id:'acta-resultados',cat:'comu',t:'Acta de resultados de un concurso con verificación matemática',
+ d:'Acta formal con ganadores, tabla final, alerta de empates y revisión de todos los puntajes.',
+ out:['Word'],attach:['~Hoja de puntajes por jurado'],
+ vars:[T('concurso','Concurso'),A('puntajes','Puntajes por jurado y criterio'),T('criterios','Ponderación de criterios')],
+ body:`Genera el acta de resultados de {{concurso}}.
+
+PUNTAJES POR JURADO Y CRITERIO:
+{{puntajes}}
+
+PONDERACIÓN: {{criterios}}
+
+ENTREGA
+1. Acta en Word con fecha, jurado, número de participantes, criterios, tabla final ordenada y ganadores.
+2. Verificación matemática de cada puntaje: muéstrame el cálculo de una muestra y confirma el resto.
+3. Alerta de empates y de qué posiciones afectan; si no afectan a los premiados, déjalo anotado para el futuro.
+4. Confírmame: fecha del acta, si el número de participantes es el total y el formato del premio.`,
+ tips:['En Sabana Shorts apareció un empate en las posiciones 7 y 8: no afectó a los ganadores, pero quedó anotado.'],
+ src:'Acta de Sabana Shorts 2026 (13 participantes)'},
+
+{id:'guion-portafolio',cat:'comu',t:'Guion cronometrado para presentar el portafolio de grupos',
+ d:'Guion de cinco minutos adaptado a una audiencia específica, con tiempos, apoyos visuales y datos que debes confirmar. Pensado para Cultura; adaptable.',
+ out:['Word'],attach:[],
+ vars:[T('audiencia','Audiencia','por ejemplo, secretarios de cultura de municipios'),T('minutos','Duración (minutos)','','5'),A('destacados','Grupos a destacar y datos','',`Danza Folclórica Ancestros: tiene alianzas documentadas con casas de cultura de Tabio, Cogua, Cajicá, Sopó y Subachoque.
+Coro UniSabana: fundado en 1987; participó en los World Choir Games (Ohio).
+Tunas masculina y femenina: giras por Latinoamérica y Europa.
+(Datos tomados del sitio oficial en una consulta anterior: confírmalos antes de usarlos.)`),T('contacto','Contacto para la última diapositiva','correo y teléfono')],
+ body:`Escribe un guion cronometrado de {{minutos}} minutos para presentar el portafolio de grupos artísticos representativos de la Universidad de La Sabana ante {{audiencia}}.
+
+${REF_GRUPOS}
+
+GRUPOS A DESTACAR Y SUS DATOS:
+{{destacados}}
+
+CONTACTO PARA EL CIERRE: {{contacto}}
+
+ESTRUCTURA
+Gancho adaptado al público (30 s) → panorama de los 15 grupos por línea (música, danza y teatro) → foco en los grupos destacados → propuesta de colaboración pensada para este público → cierre con el contacto. Incluye marcas de tiempo y una sugerencia de apoyo visual por diapositiva.
+
+REGLAS
+- Usa solo los datos que te di. Si un grupo destacado no tiene datos, dímelo en lugar de inventar.
+- Identifica cuál grupo es el mejor argumento para ESTE público (por ejemplo, alianzas ya existentes con entidades locales) y ponlo en el centro.
+- No agregues logros, años ni adjetivos de ranking («el mejor», «el más grande») que yo no haya confirmado.`,
+ tips:['Para secretarios de cultura municipales funcionó destacar un grupo con convenios locales ya documentados.','Los datos prellenados se verificaron en el sitio oficial en una consulta anterior; confírmalos antes de presentar.'],
+ src:'Presentación para secretarios de cultura de Cundinamarca'},
+
+{id:'informe-instalaciones',cat:'comu',t:'Consolidar comentarios en problemas priorizados + correo de solicitud',
+ d:'Convierte muchos comentarios sueltos en categorías por urgencia y un único correo firme y respetuoso.',
+ out:['Word','Texto'],attach:['~Fotos y videos para anexar al correo'],
+ vars:[A('comentarios','Comentarios'),T('destinatario','Destinatario'),A('extra','Otros hallazgos directos (opcional)')],
+ body:`Consolida los comentarios de abajo sobre infraestructura en categorías priorizadas y redacta un único correo a {{destinatario}}.
+
+COMENTARIOS:
+{{comentarios}}
+
+OTROS HALLAZGOS DIRECTOS:
+{{extra}}
+
+ENTREGA
+1. Informe breve en Word con categorías ordenadas por urgencia (urgente, alta, media), número de comentarios por categoría y una o dos citas representativas.
+2. Un correo único, firme y respetuoso, que comunique la gravedad (qué clases se pierden o se interrumpen y cuánto tiempo), pida inspección urgente y mencione que se adjuntan fotos y videos.
+3. Firma completa con cargo y datos de contacto.
+
+No exageres: ordena por evidencia, no por dramatismo.`,
+ tips:['Una sola solicitud consolidada tiene más fuerza que varias sueltas.'],
+ src:'Encuesta de satisfacción de grupos (55 comentarios sobre instalaciones)'},
+
+/* ================= ENCUESTAS E INSTRUMENTOS ================= */
+{id:'encuesta-prepost',cat:'instr',t:'Encuesta pre/post para medir impacto (Microsoft Forms)',
+ d:'Instrumento anclado al Modelo de Bienestar (incluido en el prompt), con código anónimo para emparejar respuestas y una lista de decisiones abiertas para validación.',
+ out:['Texto','Excel','Word'],attach:[],
+ vars:[T('programa','Programa o servicio a medir'),A('dimensiones','Dimensiones a medir (edítalas si tu programa es otro)','',`Redes de apoyo entre pares · Apropiación del ecosistema de Bienestar · Responsabilidad y autogobierno · Gestión emocional y expresión · Habilidades humanas · Autoeficacia y proyección · Bienestar y pertenencia institucional`),T('n','Número aproximado de ítems','','28'),A('criterios','Criterios de redacción propios de tu equipo (opcional)','','',true)],
+ body:`Diseña un instrumento pre/post para medir el impacto de {{programa}} más allá de la asistencia.
+
+DIMENSIONES A MEDIR:
+{{dimensiones}}
+
+${REF_MODELO}
+
+${CRIT_ITEMS}
+Criterios propios del equipo: {{criterios}}
+
+REQUISITOS
+- Anclado al Modelo de Bienestar de arriba; usa «habilidades humanas».
+- Escala Likert de 1 a 5; aproximadamente {{n}} ítems cerrados más preguntas abiertas.
+- Código anónimo autogenerado para emparejar el antes y el después sin identificar a nadie.
+- Al final del semestre, pregunta solo por experiencias que requieran haber participado.
+
+ENTREGA
+1. Instrumento listo para pegar en Microsoft Forms, con ramificación de las preguntas abiertas según el momento (inicio o cierre).
+2. Excel con objetivos y metodología, el instrumento con columnas de evaluación y los criterios de redacción.
+3. Correo al equipo de psicología solicitando validación.
+4. Lista de decisiones que dejas abiertas para esa validación (por ejemplo, ítems que podrían medir lo mismo).`,
+ tips:['En la práctica, 21 de 28 ítems requerían ajuste por doble idea, deseabilidad social o ambigüedad: pide esa revisión desde el inicio.','Las siete dimensiones prellenadas se usaron para Grupos Representativos; cámbialas por las de tu programa.','El código autogenerado resolvió el emparejamiento sin recoger datos personales.'],
+ src:'Encuesta de impacto de grupos representativos (siete dimensiones)'},
+
+{id:'revision-items',cat:'instr',t:'Revisión de ítems uno a uno con criterios de redacción',
+ d:'Método para refinar un instrumento psicométrico: diagnóstico, traslapes, lenguaje y opciones etiquetadas con recomendación.',
+ out:['Word','Excel'],attach:[],
+ vars:[T('instrumento','Instrumento'),T('indicador','Indicador en revisión'),A('items','Ítems a revisar: pégalos aquí'),A('criterios','Criterios de redacción propios de tu equipo (opcional)','','',true)],
+ body:`Revisemos el instrumento {{instrumento}} ítem por ítem.
+
+INDICADOR EN REVISIÓN: {{indicador}}
+
+ÍTEMS A REVISAR:
+{{items}}
+
+${CRIT_ITEMS}
+Criterios propios del equipo: {{criterios}}
+
+PARA CADA ÍTEM
+1. Diagnóstico: ¿cumple los criterios? ¿Cuál no?
+2. Traslape: con otros ítems del mismo indicador y con otros indicadores.
+3. Lenguaje: palabras ambiguas o subjetivas, coloquialismos, doble idea, negación, medir conocimiento en vez de conducta observable.
+4. Propuesta: dos o tres opciones etiquetadas y una recomendación con una frase de justificación.
+
+REGLAS
+- Trabaja un ítem o un grupo pequeño a la vez.
+- Si mi objeción sigue aplicando a tu propuesta, reconócelo y cambia el enfoque, no solo la redacción.
+- Distingue lo cognitivo de lo metacognitivo; si un ítem pertenece a otro indicador, dímelo.
+- Al terminar, consolida en Word (tabla por indicador) y en Excel en texto plano.`,
+ tips:['El flujo correcto: revisar poco y bien, con opciones etiquetadas, y consolidar al final.','Fija las fronteras conceptuales (por ejemplo, flexibilidad cognitiva frente a monitoreo del aprendizaje) antes de redactar.'],
+ src:'Instrumento de funciones cognitivas y metacognición (seis indicadores)'},
+
+{id:'encuesta-wrapped',cat:'instr',t:'Encuesta de satisfacción tipo «Wrapped» + dashboard de resultados',
+ d:'Encuesta de diapositivas deslizables con validaciones y un tablero filtrable por grupo, protegiendo la identidad de los estudiantes.',
+ out:['HTML'],attach:['~Lista de grupos y directores','~Las respuestas en Excel, cuando ya las tengas, para armar el dashboard'],
+ vars:[T('grupos','Grupos o servicios a evaluar'),A('criterios','Preguntas y criterios clave'),T('destino','Dónde guardar las respuestas','Google Sheets vía SheetDB, Microsoft Forms…')],
+ body:`Crea una encuesta de satisfacción con experiencia tipo «Wrapped» (diapositivas deslizables) para {{grupos}}, y un dashboard con los resultados.
+
+PREGUNTAS Y CRITERIOS CLAVE:
+{{criterios}}
+
+ENCUESTA
+- Aproximadamente 17 diapositivas, animaciones sobrias, azul institucional; calificación con emojis.
+- Campos obligatorios con validación (identificación de 6 dígitos, grupo, calificaciones, canal preferido).
+- Guarda las respuestas en: {{destino}}. Usa un marcador [URL_DEL_SERVICIO] en lugar de la dirección real.
+
+DASHBOARD
+- Filtro por grupo en todos los gráficos, KPIs con color, calificación a directores por criterio, distribución de satisfacción, canales, comparativo entre grupos, citas destacadas y temas recurrentes.
+- Conclusiones y acciones por grupo; los comentarios dirigidos a la coordinación se ven solo en la vista «Todos».
+
+PRIVACIDAD
+Los códigos de estudiante nunca deben aparecer en el dashboard publicado.
+
+NOTAS TÉCNICAS
+- SheetDB: activar CORS en su panel; enviar POST con Content-Type application/json y cuerpo {data:[{columna: valor}]}; no consultar más de una vez cada 20 segundos en el plan gratuito.
+- Ensambla el HTML en Python separando datos y estructura para no romper el escape de caracteres.`,
+ tips:['Nunca pegues URLs o claves de tu cuenta de SheetDB en un repositorio compartido: usa un marcador y configúralo al desplegar.','Si el envío falla con «Load failed», casi siempre es CORS desactivado, no la red.','Cuando agregues respuestas a mano desde Excel, confirma que no dupliques identificaciones.'],
+ src:'Cultura Wrapped 2026-1 (143 respuestas) y su dashboard'},
+
+{id:'riesgo-psicosocial',cat:'instr',t:'Recomendaciones por factor de riesgo desde la oferta real de un área',
+ d:'Tabla en Excel con recomendaciones por nivel de riesgo que reflejan solo lo que tu área puede ofrecer, con advertencias de seguridad.',
+ out:['Excel'],attach:[],
+ vars:[T('area','Área que recomienda','por ejemplo, Desarrollo Cultural'),A('factores','Factores del instrumento','',`Familia · Compañeros · Recursos institucionales · Seguridad en la zona de vivienda · Carga académica · Profesores · Hábitos de alimentación · Recursos de vivienda`),A('oferta','La oferta real de tu área: programas, servicios, grupos, cursos','por ejemplo, 15 grupos representativos, cursos libres, agenda cultural, programa para estudiantes foráneos, HIX…')],
+ body:`Crea un Excel con recomendaciones para los informes de un instrumento de riesgo psicosocial que llegarán a las facultades de la Universidad de La Sabana.
+
+ÁREA QUE RECOMIENDA: {{area}}
+
+FACTORES DEL INSTRUMENTO:
+{{factores}}
+
+NIVELES: Bajo · Medio · Alto
+
+OFERTA REAL DEL ÁREA (única base para las recomendaciones):
+{{oferta}}
+
+REGLAS CLAVE
+- Las recomendaciones reflejan SOLO lo que {{area}} puede ofrecer y hacer; no cites programas de otras áreas (cada área hará las suyas).
+- Basa cada recomendación en la oferta real de arriba; no inventes programas.
+- En factores fuera del alcance directo del área, escribe expresamente «sin intervención directa del área» en lugar de inventar una recomendación.
+- Advertencias de seguridad: por ejemplo, con carga académica alta NO recomiendes actividades que exijan mucho tiempo (como grupos representativos), porque sumarían carga en vez de dar alivio.
+
+FORMATO
+Columnas con color por nivel; descripción del factor, recursos disponibles, pasos de activación y notas de contexto.`,
+ tips:['La primera versión citaba demasiadas áreas externas: cada área debe recomendar solo desde su propia oferta.','Una advertencia explícita vale más que una recomendación forzada.','Los ocho factores prellenados son los del instrumento usado; cámbialos si el tuyo es otro.'],
+ src:'Tabla de recomendaciones de riesgo psicosocial (ocho factores)'},
+
+/* ================= REVISIÓN Y CALIDAD ================= */
+{id:'auditoria-invencion',cat:'calidad',t:'Auditoría anti-invención de datos institucionales',
+ d:'Revisa un documento antes de publicarlo y clasifica cada dato como confirmado, no verificable o posible invención. Solo reporta; no corrige.',
+ out:['Texto'],attach:[],
+ vars:[A('doc','Documento a revisar: pega aquí el texto'),A('fuentes','Fuentes válidas contra las que comparar: pega aquí datos oficiales o tus notas')],
+ body:`Audita el documento de abajo antes de que yo lo publique. NO lo corrijas todavía: solo reporta.
+
+DOCUMENTO A REVISAR:
+{{doc}}
+
+FUENTES VÁLIDAS (la única base para confirmar un dato):
+{{fuentes}}
+
+TAREA
+Extrae cada dato verificable (cifras, fechas, logros, premios, nombres de programas, cargos, nombres de personas, descripciones de grupos) y clasifícalo en una tabla:
+Dato | Dónde aparece | Estado (Confirmado en fuente · No verificable · Contradice la fuente · Posible invención) | Qué necesito confirmar.
+
+BUSCA ESPECIALMENTE
+- Adjetivos de ranking («una de las pocas», «la más grande»).
+- Nombres de programas, categorías o servicios que no aparecen en las fuentes.
+- Programas inactivos o de estado dudoso.
+- Cifras redondeadas o estimadas presentadas como datos.
+
+Al final, dame las cinco correcciones más urgentes.`,
+ tips:['Casos reales: una etiqueta inventada («Kit de aterrizaje»), un grupo descrito con un ranking sin respaldo y una competencia mal nombrada.','Úsalo siempre antes de enviar algo a un comité, a imprenta o a un público externo.'],
+ src:'Correcciones recurrentes en Modo Historia, inducciones y stands'},
+
+{id:'aritmetica',cat:'calidad',t:'Verificación aritmética de presupuestos, horas y cronogramas',
+ d:'Recalcula todo, muestra las operaciones, revisa coherencia de personas, noches y horas, y anticipa el efecto numérico de cada cambio.',
+ out:['Texto'],attach:[],
+ vars:[A('datos','Documento o datos a verificar')],
+ body:`Verifica toda la aritmética de este documento:
+
+{{datos}}
+
+HAZ LO SIGUIENTE
+1. Recalcula cada subtotal, total, promedio, porcentaje y duración. Muestra la operación (por ejemplo, 7 × $120.000 = $840.000).
+2. Compara con lo que dice el documento y marca cada diferencia con la fuente de la discrepancia.
+3. Revisa coherencia: número de personas usado en cada línea, noches de hotel, días de viaje, horas de mentores o instructores, cantidad de tiquetes por tipo.
+4. Revisa que cada partida esté en el lugar correcto (no mezcles costos de producción con premios, ni horas de nómina con horas adicionales).
+5. Antes de aplicar cualquier cambio que yo te pida, dime su efecto numérico en el total.
+
+Entrega una tabla corta: Concepto | Valor en el documento | Valor correcto | Diferencia.`,
+ tips:['Errores repetidos: partidas mal asignadas, número equivocado de personas y horas descritas como cubiertas por nómina cuando no lo estaban.','Hasta los cálculos «obvios» fallan: pide siempre ver la operación.'],
+ src:'Presupuestos de ASCUN, Maratón Musical y Reconocimientos'},
+
+{id:'cambios-quirurgicos',cat:'calidad',t:'Pedir cambios quirúrgicos a un archivo existente',
+ d:'La forma más eficaz de editar: lista numerada, cambios puntuales, explicación de cada uno y aviso de consecuencias ocultas.',
+ out:['Texto'],attach:['El archivo vigente'],
+ vars:[T('archivo','Nombre del archivo'),A('cambios','Cambios numerados','1. … 2. … 3. …')],
+ body:`Aplica SOLO estos cambios al archivo {{archivo}}. No lo reconstruyas ni modifiques nada más.
+
+CAMBIOS (numerados):
+{{cambios}}
+
+REGLAS
+1. Para cada cambio, dime qué modificaste y por qué, en una línea.
+2. Si un cambio tiene una consecuencia oculta (cifras que cambian, otro texto que queda desactualizado, una sección que ya no cuadra), dímelo antes de aplicarlo.
+3. Cuando haya Word y HTML paralelos, dame también el texto equivalente para el otro formato.
+4. Al final, busca en el archivo cualquier rastro del texto antiguo y confirma que ya no queda.
+5. Si un cambio puede hacerse de varias formas, ofréceme opciones; no me impongas una sola.`,
+ tips:['Es el patrón más usado en la práctica: listas numeradas y cambios puntuales funcionan mejor que pedir una versión nueva.','Con archivos que tienen imágenes base64 largas, pide las ediciones por script.'],
+ src:'Patrón de trabajo observado en más de 40 chats'},
+
+{id:'pre-entrega',cat:'calidad',t:'Checklist de calidad antes de entregar',
+ d:'Lista de verificación de marca, lenguaje, contenido y aspectos técnicos nacida de errores reales. Pégala al final de cualquier pedido.',
+ out:['Texto'],attach:[],
+ vars:[T('tipo','Tipo de entregable','HTML, Word, presentación…')],
+ body:`Antes de entregarme este {{tipo}}, revisa esta lista y dime el resultado de cada punto.
+
+MARCA Y LENGUAJE
+□ Colores #00205B, #00387B y blanco; tipografías definidas (Playfair Display + DM Sans; Georgia en expedientes).
+□ «UniSabana Xperience» (no «Experience»), «habilidades humanas» (no «blandas»), «DBEE» (no «BEE»).
+□ Tono cercano y profesional; ningún encuadre defensivo ni de déficit.
+
+CONTENIDO
+□ Todos los datos provienen de lo que te di; lo pendiente está explícito.
+□ Aritmética verificada (totales, horas, porcentajes).
+□ Tildes y ñ intactas en todo el texto.
+□ Sin «borrador», marcadores ni comentarios de trabajo visibles.
+□ Nombres de personas, cargos y unidades coinciden con los que te di.
+
+TÉCNICA
+□ Si es HTML: funciona sin internet, sin errores en consola, una sola diapositiva activa por mazo, contadores de navegación correctos y etiquetas balanceadas.
+□ Si es Word: cabe en las páginas pedidas (conviértelo a PDF y revísalo).
+□ Sin datos personales que no deban publicarse.
+□ Si no pudiste probarlo en un navegador real, dilo.`,
+ tips:['Cada punto nace de un error real de los chats; pegarlo al final de un pedido reduce correcciones.'],
+ src:'Errores recurrentes a lo largo del proyecto'},
+
+{id:'privacidad-app',cat:'calidad',t:'Brief de seguridad y privacidad de una app para una reunión con TI',
+ d:'Prepara una reunión con audiencias técnica y no técnica: argumento central, demostración en vivo y regla hacia adelante.',
+ out:['HTML','Texto'],attach:[],
+ vars:[T('app','Aplicación'),T('stack','Tecnología','HTML estático + GitHub + Vercel'),T('datos','Datos que recoge','ninguno, o los que correspondan')],
+ body:`Prepárame para una reunión sobre la seguridad y la privacidad de {{app}}, con dos audiencias en la misma sala: personas técnicas y personas no técnicas.
+
+TECNOLOGÍA: {{stack}}
+DATOS QUE SE RECOGEN: {{datos}}
+
+ENTREGA
+1. Contexto y objetivo de la reunión en cinco líneas.
+2. Explicación técnica: arquitectura, qué se almacena y dónde, solicitudes de red, almacenamiento local y qué registra el hosting (IP, fecha, agente), aclarando que es normal.
+3. Explicación no técnica con una analogía sencilla (por ejemplo, un folleto digital interactivo).
+4. Preguntas difíciles probables con respuesta para cada audiencia.
+5. Cómo demostrarlo en vivo: abrir el inspector del navegador (F12 → Red) y mostrar que no hay envío de datos.
+6. Postura de cierre: validar la preocupación del equipo sin ponerse a la defensiva y proponer una regla hacia adelante: toda app que recoja datos pasa por revisión de TI; las de solo presentación siguen el proceso actual.
+
+Marco legal de referencia: Ley 1581 de 2012 (protección de datos personales en Colombia). Principio rector: «mostrar, no almacenar».`,
+ tips:['Una app estática del lado del cliente, sin backend ni formularios, no recoge datos: ese es el argumento central.','Si la app sí recoge datos (encuestas, mensajes), el camino de producción es SharePoint o una plataforma validada por TI.'],
+ src:'Reunión sobre la privacidad de la app del stand de Barranquilla'}
+
+);
+/* Herramientas construidas. Para publicar el enlace de una herramienta, completa su campo url. */
+const TOOLS=[
+{n:'Generador de CSV de Horas Beca (SIGA)',e:'🕒',st:'En línea',url:'https://horas-beca.vercel.app/',
+ d:'Genera el CSV con punto y coma para la carga masiva en SIGA: código a 10 dígitos, horas y ciclo por estudiante, con validación de duplicados y nombre de convocatoria automático.',
+ reuse:'También existe un skill de Claude para crear la convocatoria diaria de Horas Beca; el inicio de sesión en SIGA siempre lo haces tú.',prompts:[]},
+{n:'Test de arquetipos DBEE',e:'🎴',st:'En línea',url:'https://testdbee.vercel.app',
+ d:'«¿Qué tipo de estudiante eres?»: seis arquetipos con datos reales de la DBEE según cada respuesta. Incluye dashboard de stand, pantalla con QR y versión de revisión para psicología.',
+ reuse:'Cambia servicios y arquetipos para otra feria con el prompt de activación.',prompts:['stand-arquetipos']},
+{n:'Generador de excusas por facultad',e:'✉️',st:'Archivo HTML',url:'',
+ d:'Importa el Excel de estudiantes, agrupa por facultad y genera una carta por facultad con concordancia singular/plural y salida a PDF por impresión.',
+ reuse:'Para otros formatos de carta pide: «misma lógica de agrupación, otro modelo de carta».',prompts:['carta-constancia']},
+{n:'App de cronograma en vivo',e:'⏱️',st:'Plantilla probada',url:'',
+ d:'Seguimiento sin login con actividad actual y siguiente, cuenta regresiva y retraso editable desde un archivo. Usada en Día de la Familia, Festival de Tunas e Inducciones.',
+ reuse:'Se despliega en GitHub y Vercel como un único index.html.',prompts:['cronograma-vivo','guion-anfitrion']},
+{n:'Constructor de rutas de formación DBEE (v1)',e:'🧭',st:'Prototipo',url:'',
+ d:'Asistente de cuatro pasos para que el personal arme rutas de formación entre jefaturas con 423 actividades; sugiere principios del PEI con IA y respaldo local.',
+ reuse:'Ideas de la versión 2: cruce con las 25 metacompetencias HIX, historial local y conexión con SIGA.',prompts:['analisis-hix']},
+{n:'Rutas de formación tipo metro (sesión colaborativa)',e:'🚇',st:'Plantilla probada',url:'',
+ d:'Sesión de ~15 personas con QR, fases controladas por un facilitador, ramales y exportes a PDF y Excel.',
+ reuse:'Aplica a cualquier sesión de construcción colectiva con un catálogo en Excel.',prompts:['sesion-colaborativa']},
+{n:'Taller de mapa de servicios y Mapa vivo',e:'🕸️',st:'Demo',url:'',
+ d:'Simulación del taller en 11 pasos y demo de red animada con IA para abrir la conversación sobre servicios entre jefaturas.',
+ reuse:'Los datos de las demos son ilustrativos; avísalo siempre al presentar.',prompts:['taller-mapa']},
+{n:'Dashboard Desarrollo Cultural 2026-1',e:'📈',st:'Archivo HTML',url:'',
+ d:'Siete secciones: datos del semestre, grupos, rendimiento, ASCUN, líderes, inventario, retención, Xperience, modelo de Bienestar y estrategia.',
+ reuse:'Úsalo como modelo para dashboards de otras coordinaciones.',prompts:['dash-informe','analisis-hix']},
+{n:'Caracterización de estudiantes foráneos',e:'🗺️',st:'Archivo HTML',url:'',
+ d:'Mapa de Colombia con filtros cruzados, flujos hacia el campus, Sankey región-facultad, programas, semestres y rendimiento.',
+ reuse:'Publica solo datos agregados; sin identificadores personales.',prompts:['dash-excel']},
+{n:'Revisor colaborativo de documentos',e:'📑',st:'Archivo HTML',url:'',
+ d:'Compara versión anterior y nueva con resaltado palabra por palabra, registra decisiones por sección, gestiona tareas, tiene modo presentación y autoguarda en el navegador.',
+ reuse:'Para documentos sensibles, el camino de producción es SharePoint.',prompts:['privacidad-app']},
+{n:'Cultura Wrapped 2026-1 y su dashboard',e:'🎁',st:'Archivo HTML',url:'',
+ d:'Encuesta de satisfacción de 17 diapositivas y un tablero filtrable por grupo con 143 respuestas.',
+ reuse:'Reutiliza la estructura cambiando los grupos y criterios.',prompts:['encuesta-wrapped']},
+{n:'Presentador de expedientes',e:'🗂️',st:'Plantilla probada',url:'',
+ d:'Plantilla HTML de pestañas para el comité semanal, más la herramienta de presentación con flechas para recorrer solo lo clave.',
+ reuse:'Cada cambio se refleja también en el Word institucional.',prompts:['exp-html','exp-presentacion','exp-word']},
+{n:'UniSabana Modo Historia',e:'🎮',st:'Archivo HTML',url:'',
+ d:'Juego de decisiones con tres áreas, 14 decisiones, nueve finales y 23 objetos coleccionables para presentar servicios a aspirantes.',
+ reuse:'Funciona sin internet, pensado para auditorios.',prompts:['historia-interactiva']},
+{n:'Planificador de festivales',e:'🎶',st:'Archivo HTML',url:'',
+ d:'Cronograma con géneros y universidades dinámicos, bloques de transición, recálculo en vivo y exportación a PDF, CSV, texto y JSON.',
+ reuse:'Sirve para cualquier evento con presentaciones por bloques.',prompts:['cronograma-festival','carta-invitacion']},
+{n:'Guía de supervivencia para estudiantes foráneos',e:'🎒',st:'Archivo HTML',url:'',
+ d:'Guía interactiva 2026: movilidad, clima, campus, seguridad, presupuesto, vida cultural con los 15 grupos y un kit con barra de progreso.',
+ reuse:'Los datos sin verificar están marcados con ⚠ dentro del archivo; confírmalos antes de publicar.',prompts:['auditoria-invencion']},
+{n:'Portafolio de los 15 grupos y campaña de correo',e:'🎭',st:'PDF y HTML',url:'',
+ d:'Portafolio profesional por categorías (música, danza, teatro) con la logística para invitar a un grupo, y el correo HTML para difundirlo.',
+ reuse:'Los enlaces del correo van como marcadores hasta tener las URL definitivas.',prompts:['email-outlook','solicitud-gr']}
+];
+
+const RULES=[
+{t:'Nunca inventes datos institucionales',
+ p:'Cifras, logros, fechas, programas y cargos salen solo de lo que tú entregas o de los documentos adjuntos. Se corrigieron una etiqueta inventada, un ranking sin respaldo y una competencia mal nombrada.',pr:['auditoria-invencion','guion-anfitrion']},
+{t:'Lo pendiente se marca, no se rellena',
+ p:'Usa ⚠ para dejar explícito lo que falta en los borradores de trabajo; en un documento que va directo al comité, déjalo en blanco y limpio. Nunca lo cubras con una estimación.',pr:['exp-word','pre-entrega']},
+{t:'Verifica la aritmética',
+ p:'Presupuestos, horas, noches, tiquetes y duraciones se recalculan y se muestran las operaciones. Hasta las cuentas simples fallaron más de una vez.',pr:['aritmetica','cronograma-festival']},
+{t:'Edita con cambios quirúrgicos',
+ p:'Una lista numerada de cambios puntuales, con la explicación de cada uno y aviso de consecuencias ocultas, funciona mejor que pedir una versión nueva.',pr:['cambios-quirurgicos']},
+{t:'Mantén en paralelo el HTML y el Word',
+ p:'Cada cambio en un formato se pide también para el otro. El Word respeta el formato institucional original y nunca copia el diseño de la página web.',pr:['exp-html','exp-word']},
+{t:'Cuida el lenguaje institucional',
+ p:'«Habilidades humanas», «UniSabana Xperience», «DBEE». Evita encuadres defensivos o de déficit («faltan X para la meta») y palabras que suenen a cifra cómoda o a condición.',pr:['ctx-maestro','comunicado']},
+{t:'Defiende las estimaciones con honestidad',
+ p:'Cuando una cifra es una estimación de trabajo, se presenta como tal y no se busca respaldo que no existe. Ofrece opciones de encuadre en vez de imponer una.',pr:['defensa-comite','deck-comite']},
+{t:'Audita antes de construir',
+ p:'Diagnostica lo que falta en una propuesta antes de diseñarla y revisa la calidad de un archivo de datos antes de graficarlo: se ahorra mucho retrabajo.',pr:['deck-comite','dash-excel','sesion-colaborativa']},
+{t:'Entrega archivos autocontenidos y probados',
+ p:'HTML en un solo archivo, imágenes en base64, funcionamiento sin internet para auditorios y sin rastros de «borrador». Si no se pudo probar en un navegador real, se dice.',pr:['deck-html','pre-entrega']},
+{t:'Mostrar, no almacenar',
+ p:'Una página estática sin backend no recoge datos. Si una herramienta recoge datos, pasa por revisión de TI; ningún código de estudiante, clave ni dirección de servicio va en una página o repositorio compartido.',pr:['privacidad-app','encuesta-wrapped']}
+];
+/* ===== Cuándo usarlo / Qué obtienes (por prompt) ===== */
+const WHEN={
+'ctx-maestro':['Al iniciar un chat nuevo con una IA que no tenga cargadas las instrucciones de la DBEE.','Un bloque que le enseña a la IA tu marca, tu tono y tus reglas para no inventar datos.'],
+'pres-unisabana':['Cuando necesitas una presentación con imagen institucional para estudiantes, directivos o externos.','Una presentación lista en HTML o PowerPoint, con la paleta y el tono UniSabana.'],
+'voz-texto':['Cuando dictas por voz o escribes rápido y quieres un texto formal sin perder datos.','Un texto limpio (carta, correo o resumen) con tus datos intactos y las dudas marcadas.'],
+'continuar-chat':['Cuando un chat se pone muy largo o la IA empieza a olvidar decisiones.','Un resumen de traspaso y un mensaje para seguir en un chat nuevo sin perder el hilo.'],
+'exp-word':['Cuando vas a presentar una iniciativa al comité semanal y necesitas el formato oficial de Expediente.','Un Word institucional con tablas de impacto y revisión, secciones numeradas y presupuesto verificado.'],
+'exp-html':['Cuando ya tienes el expediente en Word y quieres una versión visual e interactiva para el comité.','Una página HTML con pestañas y el mismo contenido, más párrafos para mantener el Word al día.'],
+'exp-presentacion':['Cuando vas a exponer un expediente y no quieres leerlo sección por sección.','Una herramienta con flechas que recorre solo lo clave y abre los datos cuando tú decides.'],
+'carta-constancia':['Cuando un estudiante participa en un evento y necesitas avisar a coordinadores y directores para proteger su horario.','Una circular de una página lista para firmar.'],
+'acta':['Después de una reunión, con notas desordenadas o dictadas.','Un acta de una a dos páginas con decisiones, responsables, fechas y pendientes.'],
+'informe-1pg':['Cuando tu jefe o el comité piden un resumen rápido de avance.','Una hoja con logros, pendientes, dificultades y próximos pasos.'],
+'cronograma-vivo':['Cuando hay un evento grande y todo el equipo necesita saber en tiempo real qué pasa y quién responde.','Una app web sin login con cuenta regresiva, actividad actual y manejo de retrasos.'],
+'guion-anfitrion':['Cuando alguien presentará a participantes en vivo y necesita un guion para leer.','Un guion por bloques con tiempos de lectura y solo datos verificados.'],
+'cronograma-festival':['Cuando armas el programa de un evento con varios bloques y los tiempos deben cuadrar.','Una tabla hora por hora con cálculos visibles y versión para Excel.'],
+'carta-invitacion':['Cuando invitas a otras universidades o instituciones a un evento.','Una carta formal con saludo genérico y un correo corto para acompañarla.'],
+'checklist-evento':['Cuando empiezas a planear un evento y no quieres olvidar nada.','Un Excel con fases, responsables, alertas críticas y hoja de evaluación.'],
+'solicitud-gr':['Cuando alguien pide un grupo representativo para un evento (pensado para Cultura; adaptable a otros equipos).','Un correo cálido y una versión de WhatsApp que explican las condiciones de participación.'],
+'deck-html':['Cuando necesitas una presentación interactiva para un taller, auditorio o reunión, incluso sin internet.','Un archivo único con navegación por flechas, modo presentador y videos incrustados.'],
+'deck-comite':['Cuando vas a presentar una propuesta con presupuesto ante un comité y quieres llegar sin huecos.','Primero una auditoría de lo que falta y luego una presentación con la decisión que se pide.'],
+'defensa-comite':['Cuando temes que el comité cuestione una cifra que en realidad es una estimación.','Preguntas probables, respuestas honestas y dos formas de encuadrar la cifra.'],
+'stand-arquetipos':['Cuando tienes una feria, un stand o una bienvenida y quieres que la gente viva los servicios en vez de escucharlos.','Un test tipo Buzzfeed, cartas coleccionables, dashboard en vivo y pantalla con QR.'],
+'historia-interactiva':['Cuando presentas servicios a grupos de 15 a 50 personas y quieres que participen decidiendo.','Un juego de decisiones con finales distintos que enseña los servicios.'],
+'taller-mapa':['Cuando varias áreas necesitan ver qué ofrece cada una y dónde se duplican o faltan servicios.','El diseño del taller, una simulación paso a paso y el guion del facilitador.'],
+'sesion-colaborativa':['Cuando quieres que un grupo construya algo en conjunto desde el celular durante una sesión.','Una app con QR, fases controladas por el facilitador y exportes a PDF y Excel.'],
+'actividad-artistica':['Cuando diseñas una actividad de arte, bienestar o formación y necesitas sustentarla con evidencia.','Conceptos, flujo de la sesión, medición y una presentación de cinco diapositivas con referencias reales.'],
+'dash-informe':['Cuando tienes un informe en Word y quieres mostrarlo como un tablero fácil de leer.','Un dashboard HTML con pestañas, gráficos y la paleta institucional.'],
+'dash-excel':['Cuando tienes una base en Excel y quieres descubrir qué cuenta.','Un perfil de calidad de los datos y una visualización con filtros y mapas, sin datos personales.'],
+'excel-grupos':['Cuando necesitas un cuadro limpio para reportar grupos, equipos o cohortes.','Un libro de Excel con validaciones, fórmulas, gráficos y notas de fuente.'],
+'analisis-hix':['Cuando quieres mostrar cómo tu área aporta a UniSabana Xperience y a las experiencias de alto impacto.','Un análisis por rasgos, el estado de cada elemento HIX y cuatro acciones para cerrar brechas.'],
+'revision-literatura':['Cuando necesitas respaldo científico para una propuesta o una hipótesis.','Una revisión con veredicto por hipótesis, calidad de la evidencia y referencias.'],
+'benchmark':['Cuando quieres saber qué hacen otras universidades antes de diseñar algo.','Una secuencia de tres prompts de Deep Research y un diagnóstico comparativo.'],
+'tabla-1hoja':['Cuando necesitas comparar instituciones en una sola página para tu equipo.','Una tabla en Word con la conclusión al inicio de cada celda y lista honesta de fuentes.'],
+'marco-teorico':['Cuando debes redactar la base conceptual de un proyecto con documentos institucionales.','Un marco teórico conciso con tres preguntas validadoras.'],
+'argumento-institucional':['Cuando necesitas defender una postura ante tu equipo con los documentos oficiales.','Un argumento anclado en la normativa institucional y un mensaje colegial.'],
+'email-outlook':['Cuando vas a enviar desde Outlook un correo con diseño.','Un HTML compatible con Outlook y cinco opciones de asunto.'],
+'kit-correos':['Cuando organizas un evento y necesitas toda la secuencia de correos.','Cuatro correos: invitación, confirmación, recordatorio y agradecimiento.'],
+'comunicado':['Cuando debes comunicar algo a estudiantes, docentes, directivos o externos.','Dos versiones con distinto tono y una recomendación de cuál usar.'],
+'bases-concurso':['Cuando lanzas un concurso o una convocatoria y necesitas todo el paquete.','Bases en Word, brief gráfico, copy, texto del formulario y correo a jurados.'],
+'acta-resultados':['Cuando termina un concurso y debes formalizar los resultados.','Un acta con ganadores, tabla final y verificación de los puntajes.'],
+'guion-portafolio':['Cuando presentas el portafolio de grupos ante un público externo (pensado para Cultura; adaptable).','Un guion de cinco minutos con tiempos y apoyos visuales.'],
+'informe-instalaciones':['Cuando tienes muchas quejas o comentarios y necesitas pedir una solución.','Un informe priorizado y un único correo firme y respetuoso.'],
+'encuesta-prepost':['Cuando quieres medir el impacto de un programa más allá de la asistencia.','Un instrumento para Forms con código anónimo, Excel de apoyo y correo de validación.'],
+'revision-items':['Cuando estás depurando las preguntas de un instrumento psicométrico.','Un diagnóstico por ítem con opciones etiquetadas y un consolidado final.'],
+'encuesta-wrapped':['Cuando quieres una encuesta de satisfacción atractiva y un tablero de resultados.','Una encuesta tipo Wrapped y un dashboard filtrable.'],
+'riesgo-psicosocial':['Cuando tu área debe dar recomendaciones según niveles de riesgo.','Un Excel con recomendaciones por factor y nivel, solo desde tu oferta.'],
+'auditoria-invencion':['Antes de publicar o imprimir un documento con datos institucionales.','Una tabla que marca cada dato como confirmado, no verificable o posible invención.'],
+'aritmetica':['Siempre que haya presupuestos, horas o cronogramas.','Todos los cálculos rehechos y las diferencias marcadas.'],
+'cambios-quirurgicos':['Cada vez que quieras corregir un archivo ya hecho.','Solo los cambios que pediste, explicados y con sus consecuencias.'],
+'pre-entrega':['Al final de casi cualquier pedido, antes de recibir el entregable.','Una revisión de marca, lenguaje, contenido y técnica.'],
+'privacidad-app':['Cuando TI o tu equipo preguntan si una app recoge datos.','Un brief con respuestas técnicas y no técnicas y una demostración en vivo.']
+};
+const CULT=['solicitud-gr','guion-portafolio'];
+PROMPTS.forEach(p=>{const w=WHEN[p.id]||['',''];p.when=w[0];p.get=w[1];p.ar=CULT.includes(p.id)?'Cultura':'Todas las áreas';});
+
+const TOOL_AR={'Generador de excusas por facultad':'Cultura','Dashboard Desarrollo Cultural 2026-1':'Cultura','Cultura Wrapped 2026-1 y su dashboard':'Cultura','Portafolio de los 15 grupos y campaña de correo':'Cultura'};
+TOOLS.forEach(t=>{t.ar=TOOL_AR[t.n]||'Todas las áreas';});
+
+const AREAS=['Éxito Académico (CREA)','Gestión de Becarios','Deportes','Experiencia del Estudiante','Cultura','Prevención y Salud','Comunicaciones','Dirección / Coordinación','Otra'];
+const FEATURED=['pre-entrega','cambios-quirurgicos','exp-word','deck-comite','comunicado','acta'];
+const TRY=[['Preparar un comité','comite'],['Organizar un evento','evento'],['Escribir un correo','correo'],['Analizar un Excel','excel'],['Hacer una encuesta','encuesta'],['Revisar presupuestos','presupuestos']];
+const PH=['Preparar un expediente para el comité…','Armar el cronograma de un evento…','Revisar las cifras de un presupuesto…','Convertir un Excel en un tablero…','Escribir un correo de invitación…','Diseñar una encuesta de impacto…'];
+/* ============ MOTOR ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function lsGet(k,def){try{const v=localStorage.getItem(k);return v===null?def:JSON.parse(v);}catch(e){return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+const catById=Object.fromEntries(CATS.map(c=>[c.id,c]));
+const byId=Object.fromEntries(PROMPTS.map(p=>[p.id,p]));
+PROMPTS.forEach(p=>{
+  p._t=norm(p.t);
+  p._w=norm([p.when,p.d,p.get].join(' '));
+  p._r=norm([p.body==='__CTX__'?'':p.body,(p.tips||[]).join(' '),p.src,catById[p.cat].n,catById[p.cat].w,p.out.join(' '),p.ar].join(' '));
+});
+
+let favs=lsGet('dc_favs',[]);
+let recents=lsGet('dc_recents',[]);
+let area=lsGet('dc_area','');
+let ctxOn=lsGet('dc_ctx',true);
+const VALS={};          /* lo que escribes en los campos NO se guarda: solo vive mientras la página está abierta */
+let outF='all';
+let readyF=false;
+let route={name:'home'};
+
+/* ---------- contexto institucional ---------- */
+function ctxText(){
+  const a=area&&area!=='Otra'?`, en el área de ${area}`:'';
+  return `CONTEXTO INSTITUCIONAL
+Trabajo en la Dirección de Bienestar y Experiencia del Estudiante (DBEE) de la Universidad de La Sabana (Campus Puente del Común, Chía)${a}. La DBEE acompaña a estudiantes de pregrado y posgrado en éxito académico, prevención y salud, cultura y deporte, y formación humana y para el trabajo. Marcos de referencia: modelo DBEE, UniSabana Xperience y HIX.
+
+${CTX_TAIL}`;
+}
+const bodyOf=p=>p.body==='__CTX__'?ctxText():p.body;
+function valsOf(p){return VALS[p.id]||(VALS[p.id]={});}
+function fillText(p,html){
+  const v=valsOf(p);
+  return bodyOf(p).split(/(\{\{\w+\}\})/).map(s=>{
+    const m=s.match(/^\{\{(\w+)\}\}$/);
+    if(!m)return html?esc(s):s;
+    const def=p.vars.find(x=>x.k===m[1]);
+    const raw=Object.prototype.hasOwnProperty.call(v,m[1])?v[m[1]]:((def&&def.def)||'');
+    let val=String(raw).trim();
+    if(!val&&def&&def.opt)val='ninguno';
+    if(val)return html?`<span class="fill">${esc(val)}</span>`:val;
+    const lab='['+(def?def.l:m[1]).toUpperCase()+']';
+    return html?`<mark>${esc(lab)}</mark>`:lab;
+  }).join('');
+}
+const req=p=>(p.attach||[]).filter(a=>a[0]!=='~');
+const tailOf=p=>req(p).length?'\n\nSi algún archivo o dato que menciono arriba no está en este chat, pídemelo antes de empezar y no inventes su contenido.':'';
+const plainPrompt=p=>(ctxOn&&!p.noCtx?ctxText()+'\n\n———\n\n':'')+fillText(p,false)+tailOf(p);
+
+/* ---------- tema ---------- */
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);}
+applyTheme(lsGet('dc_theme',null));
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const sysDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const next=(cur?cur==='dark':sysDark)?'light':'dark';
+  applyTheme(next);lsSet('dc_theme',next);
+}
+
+/* ---------- búsqueda ---------- */
+function search(q){
+  const w=norm(q).split(/\s+/).filter(Boolean);
+  if(!w.length)return [];
+  return PROMPTS.map(p=>{
+    let s=0;
+    for(const x of w){
+      if(p._t.includes(x))s+=4;else if(p._w.includes(x))s+=2;else if(p._r.includes(x))s+=1;else return null;
+    }
+    return {p,s};
+  }).filter(Boolean).sort((a,b)=>b.s-a.s).map(o=>o.p);
+}
+
+/* ---------- piezas de UI ---------- */
+function searchBox(big,val){
+  return `<div class="sbox ${big?'':'sm'}"><form class="comp" data-search role="search" autocomplete="off">
+    <span class="mg" aria-hidden="true">✦</span>
+    <input class="sq" type="search" name="q" value="${esc(val||'')}" placeholder="${big?esc(PH[0]):'Buscar un prompt…'}" aria-label="Buscar prompts" autocomplete="off">
+    <button class="go" type="submit" aria-label="Buscar">→</button></form><div class="sug" hidden></div></div>`;
+}
+function pcard(p){
+  const f=favs.includes(p.id);
+  return `<article class="pc"><div class="top"><span class="ic" aria-hidden="true">${catById[p.cat].e}</span>
+    <button class="star ${f?'on':''}" data-fav="${p.id}" aria-pressed="${f}" aria-label="${f?'Quitar de favoritos':'Guardar en favoritos'}">${f?'★':'☆'}</button></div>
+    <h3><a href="#/p/${p.id}">${esc(p.t)}</a></h3>
+    <p class="wh"><b>Úsalo cuando:</b> ${esc(p.when.replace(/^Cuando /,'').replace(/^(.)/,c=>c.toLowerCase()))}</p>
+    <div class="chips">${req(p).length?'<span class="chip need">📎 Requiere tus archivos</span>':'<span class="chip ok">✓ Listo para pegar</span>'}${p.out.map(o=>`<span class="chip">${o}</span>`).join('')}${p.ar!=='Todas las áreas'?`<span class="chip ar">${esc(p.ar)}</span>`:''}</div></article>`;
+}
+function fmtPills(){
+  return `<div class="pills" role="group" aria-label="Filtrar por formato"><button class="pl2" data-out="all" aria-pressed="${outF==='all'}">Todos los formatos</button>${OUTS.map(o=>`<button class="pl2" data-out="${o}" aria-pressed="${outF===o}">${o}</button>`).join('')}<button class="pl2" data-ready aria-pressed="${readyF}">✓ Solo los listos para pegar</button></div>`;
+}
+const okOut=p=>(outF==='all'||p.out.includes(outF))&&(!readyF||!req(p).length);
+function foot(){return `<div class="foot">Prompts DBEE · Universidad de La Sabana · Construido a partir de 69 chats de trabajo real (abril–octubre 2026).<br>¿Falta algo o encontraste un error? Escribe a <a href="mailto:santiago.bedoya@unisabana.edu.co">santiago.bedoya@unisabana.edu.co</a></div>`;}
+
+/* ---------- menú lateral ---------- */
+function renderSide(){
+  const cur=route.name, cid=route.id;
+  const cc=id=>PROMPTS.filter(p=>p.cat===id).length;
+  const nl=(href,em,nm,ct,isCur)=>`<a class="nl" href="${href}" ${isCur?'aria-current="page"':''}><span class="em" aria-hidden="true">${em}</span><span class="nm">${esc(nm)}</span>${ct!==''?`<span class="ct">${ct}</span>`:''}</a>`;
+  const rc=recents.filter(id=>byId[id]).slice(0,5);
+  $('#side').innerHTML=`
+   <a class="brand" href="#/" aria-label="Ir al inicio"><span class="logo" aria-hidden="true">✦</span><span><b>Prompts DBEE</b><small>Bienestar y Experiencia del Estudiante</small></span></a>
+   ${nl('#/','🏠','Inicio','',cur==='home')}
+   ${nl('#/c/all','📚','Todos los prompts',PROMPTS.length,cur==='cat'&&cid==='all')}
+   ${nl('#/favs','★','Mis favoritos',favs.length,cur==='favs')}
+   ${rc.length?`<div class="sl">Recientes</div>${rc.map(id=>`<a class="nl rc" href="#/p/${id}" ${cur==='prompt'&&cid===id?'aria-current="page"':''}><span class="em" aria-hidden="true">🕘</span><span class="nm">${esc(byId[id].t)}</span></a>`).join('')}`:''}
+   <div class="sl">¿Qué quieres hacer?</div>
+   ${CATS.map(c=>nl('#/c/'+c.id,c.e,c.n,cc(c.id),cur==='cat'&&cid===c.id)).join('')}
+   <div class="sl">Más</div>
+   ${nl('#/tools','🛠️','Herramientas listas',TOOLS.length,cur==='tools')}
+   ${nl('#/rules','📏','Reglas de oro',RULES.length,cur==='rules')}
+   ${nl('#/guia','❓','Cómo usarlo (guía rápida)','',cur==='guia')}
+   <div class="sfoot"><label class="lbl" for="areaSide">Mi área en la DBEE</label>
+     <select class="areaSel" id="areaSide" data-area><option value="">Elige tu área…</option>${AREAS.map(a=>`<option ${area===a?'selected':''}>${esc(a)}</option>`).join('')}</select>
+     <button class="themeb" data-theme>◐ Cambiar tema claro / oscuro</button></div>`;
+}
+
+/* ---------- vistas ---------- */
+function viewHome(){
+  const h=new Date().getHours();
+  const saludo=h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';
+  const rec=recents.filter(id=>byId[id]).slice(0,3).map(id=>byId[id]);
+  const fv=favs.filter(id=>byId[id]).slice(0,3).map(id=>byId[id]);
+  const cc=id=>PROMPTS.filter(p=>p.cat===id).length;
+  return `<div class="in">
+  <section class="hero">
+    <span class="pill"><i>${PROMPTS.length}</i> prompts listos para usar</span>
+    <h1>${saludo}. ¿Qué necesitas hacer hoy?</h1>
+    <p class="sub">Elige un prompt, complétalo en un minuto y pégalo en tu IA (Claude, ChatGPT o Copilot). Sale con el tono, los colores y las reglas de la DBEE.</p>
+    ${searchBox(true,'')}
+    <div class="try"><span class="hint" style="align-self:center">Prueba con:</span>${TRY.map(([l,q])=>`<button data-q="${esc(q)}">${esc(l)}</button>`).join('')}</div>
+    <label class="myarea">Mi área: <select class="areaSel" data-area style="width:auto"><option value="">Elige tu área (opcional)</option>${AREAS.map(a=>`<option ${area===a?'selected':''}>${esc(a)}</option>`).join('')}</select></label>
+  </section>
+
+  <section class="sec"><div class="sh"><div><h2>Cómo funciona</h2><p>Tres pasos, sin cuentas ni instalaciones.</p></div><a href="#/guia">Ver la guía completa →</a></div>
+    <div class="how">
+      <div class="hw"><div class="n">1</div><h3>Elige lo que quieres hacer</h3><p>Busca arriba o entra a una categoría. Cada prompt te dice <b>cuándo usarlo</b> y <b>qué vas a obtener</b>.</p></div>
+      <div class="hw"><div class="n">2</div><h3>Completa los datos</h3><p>Escribe en los campos y el prompt se arma solo. Lo que escribes no se guarda en ningún lado.</p></div>
+      <div class="hw"><div class="n">3</div><h3>Copia y pega en tu IA</h3><p>Un clic copia el prompt. Adjunta los archivos que te indicamos y envía.</p></div>
+    </div></section>
+
+  ${fv.length?`<section class="sec"><div class="sh"><h2>★ Tus favoritos</h2><a href="#/favs">Ver todos →</a></div><div class="grid">${fv.map(pcard).join('')}</div></section>`:''}
+  ${rec.length?`<section class="sec"><div class="sh"><div><h2>🕘 Para retomar</h2><p>Lo último que abriste.</p></div></div><div class="grid">${rec.map(pcard).join('')}</div></section>`:''}
+
+  <section class="sec"><div class="sh"><div><h2>Empieza por lo que quieres hacer</h2><p>Cada categoría agrupa los prompts de una misma tarea.</p></div><a href="#/c/all">Ver todos los prompts →</a></div>
+    <div class="tiles">${CATS.map(c=>`<a class="tile" href="#/c/${c.id}"><span class="ic" aria-hidden="true">${c.e}</span><h3>${esc(c.n)}</h3><p>${esc(c.w)}</p><span class="ct">${cc(c.id)} prompts →</span></a>`).join('')}</div></section>
+
+  <section class="sec"><div class="sh"><div><h2>Si es tu primera vez, empieza por estos</h2><p>Los que más ahorran correcciones.</p></div></div>
+    <div class="grid">${FEATURED.filter(id=>byId[id]).map(id=>pcard(byId[id])).join('')}</div></section>
+  ${foot()}</div>`;
+}
+
+function catPills(active){
+  return `<nav class="pills" aria-label="Categorías"><a class="pl2" href="#/c/all" ${active==='all'?'aria-current="page"':''}>📚 Todos</a>${CATS.map(c=>`<a class="pl2" href="#/c/${c.id}" ${active===c.id?'aria-current="page"':''}>${c.e} ${esc(c.n)}</a>`).join('')}</nav>`;
+}
+function viewCat(id){
+  const all=id==='all';const c=catById[id];
+  if(!all&&!c)return viewNotFound();
+  const groups=(all?CATS:[c]).map(k=>({k,items:PROMPTS.filter(p=>p.cat===k.id&&okOut(p))})).filter(g=>g.items.length);
+  const total=groups.reduce((n,g)=>n+g.items.length,0);
+  return `<div class="in"><div class="vh">
+    <div class="crumbs"><a href="#/">Inicio</a> › <span>${all?'Todos los prompts':esc(c.n)}</span></div>
+    <h1>${all?'📚 Todos los prompts':c.e+' '+esc(c.n)}</h1>
+    <p class="d">${all?'Todo el repositorio, ordenado por lo que quieres hacer. Usa el buscador o los formatos para filtrar.':esc(c.w)}</p>
+    <div class="bar2">${searchBox(false,'')}</div></div>
+    ${catPills(id)}${fmtPills()}<div class="cnt" style="margin:0 0 12px;text-align:right">${total} ${total===1?'prompt':'prompts'}</div>
+    ${groups.length?groups.map(g=>`<section class="sec" style="margin-top:${all?30:8}px">${all?`<div class="sh"><div><h2>${g.k.e} ${esc(g.k.n)}</h2><p>${esc(g.k.w)}</p></div></div>`:''}<div class="grid">${g.items.map(pcard).join('')}</div></section>`).join(''):`<div class="empty"><b>No hay prompts con ese formato en esta categoría</b>Prueba con otro formato o mira todos los prompts.</div>`}
+    ${foot()}</div>`;
+}
+function viewList(title,emoji,desc,items,emptyHtml,crumb){
+  return `<div class="in"><div class="vh"><div class="crumbs"><a href="#/">Inicio</a> › <span>${esc(crumb||title)}</span></div>
+    <h1>${emoji} ${esc(title)}</h1><p class="d">${desc}</p></div>
+    ${items.length?`<div class="grid" style="margin-top:18px">${items.map(pcard).join('')}</div>`:emptyHtml}${foot()}</div>`;
+}
+function viewSearch(q){
+  const res=search(q).filter(okOut);
+  return `<div class="in"><div class="vh"><div class="crumbs"><a href="#/">Inicio</a> › <span>Búsqueda</span></div>
+    <h1>Resultados para «${esc(q)}»</h1><p class="d">${res.length} ${res.length===1?'prompt encontrado':'prompts encontrados'}.</p>
+    <div class="bar2">${searchBox(false,q)}</div></div>${fmtPills()}
+    ${res.length?`<div class="grid" style="margin-top:8px">${res.map(pcard).join('')}</div>`
+      :`<div class="empty"><b>No encontramos prompts con «${esc(q)}»</b>Prueba con una palabra más simple (por ejemplo «evento», «correo» o «Excel») o explora por categoría.<div class="try">${CATS.slice(0,6).map(c=>`<a class="pl2" href="#/c/${c.id}">${c.e} ${esc(c.n)}</a>`).join('')}</div></div>`}${foot()}</div>`;
+}
+function viewTools(){
+  return `<div class="in"><div class="vh"><div class="crumbs"><a href="#/">Inicio</a> › <span>Herramientas</span></div>
+    <h1>🛠️ Herramientas que ya construimos</h1>
+    <p class="d">Apps y plantillas que ya existen. Cada una enlaza con los prompts para recrearla o adaptarla a tu área. Solo tienen enlace directo las que ya están publicadas.</p></div>
+    <div class="grid" style="margin-top:18px">${TOOLS.map(t=>`<article class="tc"><div class="top"><span class="pc"><span class="ic" style="width:38px;height:38px;border-radius:11px;background:var(--tint);display:grid;place-items:center;font-size:19px">${t.e}</span></span><span class="badge ${t.url?'live':''}">${esc(t.st)}</span></div>
+      <h3>${esc(t.n)}</h3><p class="hint">${esc(t.d)}</p>
+      <div class="chips" style="margin-top:0"><span class="chip ar">${esc(t.ar)}</span></div>
+      ${t.url?`<a class="lnk" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">${esc(t.url.replace(/^https?:\/\//,''))} ↗</a>`:''}
+      <div class="rs">${esc(t.reuse)}</div>
+      ${t.prompts.filter(id=>byId[id]).length?`<div class="lk">${t.prompts.filter(id=>byId[id]).map(id=>`<a href="#/p/${id}">📋 ${esc(byId[id].t.length>42?byId[id].t.slice(0,40)+'…':byId[id].t)}</a>`).join('')}</div>`:''}</article>`).join('')}</div>${foot()}</div>`;
+}
+function viewRules(){
+  return `<div class="in"><div class="vh"><div class="crumbs"><a href="#/">Inicio</a> › <span>Reglas de oro</span></div>
+    <h1>📏 Reglas de oro del equipo</h1>
+    <p class="d">Principios que salieron de las correcciones reales de más de 60 chats. Si los aplicas desde el primer prompt, te ahorras rondas de ajustes.</p></div>
+    <div class="rl" style="margin-top:18px">${RULES.map(r=>`<div class="rule"><h3>${esc(r.t)}</h3><p>${esc(r.p)}</p><div class="lk">${r.pr.filter(id=>byId[id]).map(id=>`<a href="#/p/${id}">📋 ${esc(byId[id].t.length>42?byId[id].t.slice(0,40)+'…':byId[id].t)}</a>`).join('')}</div></div>`).join('')}</div>${foot()}</div>`;
+}
+function viewGuia(){
+  const go=(id,t)=>`<a href="#/c/${id}">${t}</a>`;
+  return `<div class="in"><div class="vh"><div class="crumbs"><a href="#/">Inicio</a> › <span>Guía rápida</span></div>
+    <h1>❓ Cómo usar este repositorio</h1>
+    <p class="d">Un <b>prompt</b> es la instrucción que le das a una IA. Uno bien escrito te da en el primer intento lo que antes tomaba cinco correcciones. Aquí ya están escritos, probados y con las reglas de la DBEE.</p></div>
+
+    <section class="sec" style="margin-top:22px"><div class="sh"><h2>En cuatro pasos</h2></div>
+      <div class="how" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <div class="hw"><div class="n">1</div><h3>Busca</h3><p>Escribe lo que quieres hacer o entra por una categoría.</p></div>
+        <div class="hw"><div class="n">2</div><h3>Lee «Cuándo usarlo»</h3><p>Confirma que es el prompt correcto y mira qué vas a obtener.</p></div>
+        <div class="hw"><div class="n">3</div><h3>Completa y copia</h3><p>Llena los campos resaltados y pulsa «Copiar prompt».</p></div>
+        <div class="hw"><div class="n">4</div><h3>Pega en tu IA</h3><p>Adjunta los archivos indicados, envía y ajusta con «Cambios quirúrgicos».</p></div>
+      </div></section>
+
+    <section class="sec"><div class="sh"><h2>¿Qué prompt uso?</h2><p>Si necesitas…</p></div>
+      <div class="tw"><table class="mp"><tbody>
+        <tr><td>Presentar algo ante el comité</td><td>${go('docs','Escribir documentos')} · ${go('pres','Presentar ante un comité')}</td></tr>
+        <tr><td>Organizar un evento o feria</td><td>${go('eventos','Organizar un evento')} · ${go('activ','Crear una actividad o taller')}</td></tr>
+        <tr><td>Escribir un correo, comunicado o convocatoria</td><td>${go('comu','Comunicar y convocar')}</td></tr>
+        <tr><td>Trabajar con un Excel o un informe</td><td>${go('datos','Analizar datos y hacer tableros')}</td></tr>
+        <tr><td>Sustentar una idea con evidencia</td><td>${go('invest','Investigar y sustentar')}</td></tr>
+        <tr><td>Medir el impacto de un programa</td><td>${go('instr','Medir con encuestas')}</td></tr>
+        <tr><td>Revisar que todo esté bien antes de enviar</td><td>${go('calidad','Revisar antes de entregar')}</td></tr>
+        <tr><td>No sé por dónde empezar</td><td>${go('base','Primeros pasos')}</td></tr>
+      </tbody></table></div></section>
+
+    <section class="sec faq"><div class="sh"><h2>Preguntas frecuentes</h2></div>
+      <details open><summary>¿Por qué algunos prompts piden adjuntar archivos y otros no?</summary><p>Todo lo institucional (formatos oficiales, textos base de cartas, el marco del Modelo DBEE y de UniSabana Xperience, las reglas de tono y marca) ya viene escrito dentro del prompt. Solo se piden adjuntos cuando necesitan <b>tus</b> datos: un Excel, un informe, una propuesta. Los prompts marcados «✓ Listo para pegar» funcionan tal cual en un chat vacío; los marcados «📎 Requiere tus archivos» te dicen qué traer.</p></details>
+      <details><summary>¿Qué IA debo usar?</summary><p>Funcionan en Claude, ChatGPT o Copilot: el prompt es texto. Algunos piden crear archivos (Word, Excel, HTML); eso depende de la herramienta que uses, así que si una IA no puede generar el archivo, pídele el contenido y conviértelo después.</p></details>
+      <details><summary>¿Qué significan los textos resaltados como [NOMBRE DEL EVENTO]?</summary><p>Son campos por completar. Los llenas a la izquierda y el prompt se actualiza solo. Si copias el prompt con alguno vacío, la IA verá el texto entre corchetes y te lo preguntará.</p></details>
+      <details><summary>¿Qué es «Incluir contexto UniSabana»?</summary><p>Antepone al prompt un bloque con la marca, el tono, el vocabulario y la regla de no inventar datos. Déjalo activado cuando uses una IA que no tenga cargadas las instrucciones de la DBEE. Si eliges tu área en el menú, el contexto la menciona.</p></details>
+      <details><summary>¿Y si el resultado no es lo que esperaba?</summary><p>No pidas todo de nuevo. Usa el prompt «Pedir cambios quirúrgicos»: una lista numerada de cambios puntuales funciona mucho mejor que rehacer el archivo.</p></details>
+      <details><summary>¿Puedo pegar datos de estudiantes?</summary><p>Evita datos personales (documentos, teléfonos, códigos) salvo que sean indispensables, y consulta con TI qué herramientas de IA están aprobadas para manejar información de estudiantes. Para tableros y publicaciones, usa solo datos agregados.</p></details>
+      <details><summary>¿La IA puede inventar datos?</summary><p>Sí, puede. Por eso estos prompts le piden usar solo lo que le das y marcar con ⚠ lo que falte. Antes de publicar algo con cifras o nombres, usa «Auditoría anti-invención» y «Verificación aritmética».</p></details>
+      <details><summary>¿Se guarda lo que escribo en los campos?</summary><p>No. Lo que escribes solo existe mientras la página está abierta. Lo único que se guarda en tu navegador son tus favoritos, los prompts recientes, tu área y el tema claro u oscuro.</p></details>
+      <details><summary>¿Cómo agrego un prompt nuevo?</summary><p>Escríbele a <a class="lnk" href="mailto:santiago.bedoya@unisabana.edu.co">santiago.bedoya@unisabana.edu.co</a> con lo que lograste y qué te funcionó. Entre más ejemplos reales, mejor queda el prompt.</p></details>
+    </section>${foot()}</div>`;
+}
+function viewNotFound(){
+  return `<div class="in"><div class="vh"><h1>No encontramos esa página</h1></div><div class="empty"><b>Quizás el enlace cambió</b>Vuelve al inicio o explora todos los prompts.<div class="try"><a class="pl2" href="#/">🏠 Inicio</a><a class="pl2" href="#/c/all">📚 Todos los prompts</a></div></div></div>`;
+}
+
+/* ---------- detalle de un prompt ---------- */
+function field(v,p){
+  const val=esc(Object.prototype.hasOwnProperty.call(valsOf(p),v.k)?valsOf(p)[v.k]:(v.def||''));
+  if(v.t==='area')return `<div class="fld"><label for="f_${v.k}">${esc(v.l)}</label><textarea id="f_${v.k}" data-var="${v.k}" placeholder="${esc(v.ph)}">${val}</textarea></div>`;
+  if(v.t==='select')return `<div class="fld"><label for="f_${v.k}">${esc(v.l)}</label><select id="f_${v.k}" data-var="${v.k}"><option value="">Elige una opción…</option>${v.opts.map(o=>`<option ${valsOf(p)[v.k]===o?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
+  return `<div class="fld"><label for="f_${v.k}">${esc(v.l)}</label><input id="f_${v.k}" data-var="${v.k}" type="text" value="${val}" placeholder="${esc(v.ph)}"></div>`;
+}
+function viewPrompt(id){
+  const p=byId[id];if(!p)return viewNotFound();
+  const c=catById[p.cat];const f=favs.includes(id);
+  let n=0;const N=()=>`<span class="num">${++n}</span>`;
+  const left=[];
+  const rq=req(p),op=(p.attach||[]).filter(a=>a[0]==='~').map(a=>a.slice(1));
+  if(rq.length||op.length)left.push(`<section class="step"><h3>${N()} Lo que debes traer tú</h3><p class="hint" style="margin-bottom:8px">${rq.length?'Todo lo institucional (formatos, marco DBEE, tono) ya viene dentro del prompt. Solo necesitas adjuntar al chat de tu IA:':'No necesitas adjuntar nada. Si quieres, puedes sumar:'}</p><ul class="ul">${rq.map(a=>`<li><b>${esc(a)}</b></li>`).join('')}${op.map(a=>`<li>${esc(a)} <span class="hint">(opcional)</span></li>`).join('')}</ul></section>`);
+  else left.push(`<section class="step ok1"><p style="font-size:14.5px">✓ <b>Listo para pegar.</b> Este prompt trae todo lo que necesita: no tienes que adjuntar nada.</p></section>`);
+  if(p.vars.length)left.push(`<section class="step"><h3>${N()} Completa los datos</h3>${p.vars.map(v=>field(v,p)).join('')}</section>`);
+  const right=`<section class="step"><div class="pvh"><h3>${N()} Copia tu prompt</h3>${p.noCtx?'':`<label class="tg"><input type="checkbox" id="ctxT" ${ctxOn?'checked':''}> Incluir contexto UniSabana</label>`}</div>
+      <div class="pv" id="pv" tabindex="0" aria-label="Vista previa del prompt"></div>
+      <button class="btn big" data-copy>📋 Copiar prompt</button></section>
+    <section class="step"><h3>${N()} Pégalo en tu IA</h3><p class="hint" style="margin-bottom:10px">Copia el prompt y ábrelo en la herramienta que uses. Pégalo con Ctrl+V (⌘+V en Mac).</p>
+      <div class="ai"><a class="btn ghost" data-ai href="https://claude.ai/new" target="_blank" rel="noopener noreferrer">Copiar y abrir Claude ↗</a>
+      <a class="btn ghost" data-ai href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">Copiar y abrir ChatGPT ↗</a>
+      <a class="btn ghost" data-ai href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer">Copiar y abrir Copilot ↗</a></div></section>`;
+  const rel=PROMPTS.filter(x=>x.cat===p.cat&&x.id!==id).slice(0,3);
+  const next=['pre-entrega','cambios-quirurgicos'].filter(x=>x!==id&&byId[x]);
+  return `<div class="in"><div class="vh">
+    <div class="crumbs"><a href="#/">Inicio</a> › <a href="#/c/${c.id}">${esc(c.n)}</a> › <span>${esc(p.t)}</span></div>
+    <div style="display:flex;gap:12px;align-items:flex-start;justify-content:space-between">
+      <h1>${esc(p.t)}</h1>
+      <button class="star ${f?'on':''}" data-fav="${id}" aria-pressed="${f}" aria-label="${f?'Quitar de favoritos':'Guardar en favoritos'}" style="font-size:26px;flex:none">${f?'★':'☆'}</button></div></div>
+    <div class="info3">
+      <div class="inf"><h4>📍 ¿Cuándo usarlo?</h4><p>${esc(p.when)}</p></div>
+      <div class="inf"><h4>🎁 ¿Qué obtienes?</h4><p>${esc(p.get)}</p></div>
+      <div class="inf"><h4>📦 Formato y área</h4><div class="chips" style="margin-top:2px">${req(p).length?'<span class="chip need">📎 Requiere tus archivos</span>':'<span class="chip ok">✓ Listo para pegar</span>'}${p.out.map(o=>`<span class="chip">${o}</span>`).join('')}<span class="chip ar">${esc(p.ar)}</span></div></div></div>
+    <div class="dgrid"><div>${left.join('')}
+      ${p.tips&&p.tips.length?`<section class="step tip"><h3>💡 Lecciones de otras veces</h3><ul class="ul">${p.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>${p.src?`<p class="src">Nació de: ${esc(p.src)}</p>`:''}</section>`:''}</div>
+      <div class="stk">${right}</div></div>
+    <section class="sec"><div class="sh"><h2>¿Y después?</h2></div><div class="nx">${next.map(x=>`<a href="#/p/${x}"><small>Siguiente paso recomendado</small><b>${esc(byId[x].t)}</b></a>`).join('')}</div></section>
+    ${rel.length?`<section class="sec"><div class="sh"><h2>Más de «${esc(c.n)}»</h2><a href="#/c/${c.id}">Ver categoría →</a></div><div class="grid">${rel.map(pcard).join('')}</div></section>`:''}
+    ${foot()}</div>`;
+}
+function updatePv(){
+  const p=route.name==='prompt'?byId[route.id]:null;const el=$('#pv');if(!p||!el)return;
+  el.innerHTML=(ctxOn&&!p.noCtx?`<span class="ctx">${esc(ctxText())}</span>`:'')+fillText(p,true)+esc(tailOf(p));
+}
+
+/* ---------- router ---------- */
+function parse(){
+  let h=(location.hash||'').replace(/^#\/?/,'');
+  if(!h)return {name:'home'};
+  const parts=h.split('/');
+  const a=parts[0],b=parts.slice(1).join('/');
+  if(a==='c')return {name:'cat',id:b||'all'};
+  if(a==='p')return {name:'prompt',id:b};
+  if(a==='buscar'){let q=b;try{q=decodeURIComponent(b);}catch(e){}return {name:'search',q};}
+  if(['favs','recent','tools','rules','guia'].includes(a))return {name:a};
+  if(byId[h])return {name:'prompt',id:h,legacy:true};
+  return {name:'nf'};
+}
+let lastKey='';
+function render(){
+  route=parse();
+  if(route.legacy){location.replace('#/p/'+route.id);return;}
+  const key=route.name+'|'+(route.id||route.q||'');
+  const changed=key!==lastKey;
+  if(changed){outF='all';readyF=false;}
+  let html='',title='Prompts DBEE',bar=false;
+  switch(route.name){
+    case 'home':html=viewHome();break;
+    case 'cat':html=viewCat(route.id);title=(catById[route.id]?catById[route.id].n:'Todos los prompts');break;
+    case 'favs':{const it=favs.map(id=>byId[id]).filter(Boolean);
+      html=viewList('Mis favoritos','★','Los prompts que guardaste con la estrella. Se guardan en este navegador.',it,`<div class="empty"><b>Aún no tienes favoritos</b>Toca la ★ de cualquier prompt para guardarlo aquí y volver rápido.<div class="try"><a class="pl2" href="#/c/all">📚 Ver todos los prompts</a></div></div>`);title='Favoritos';break;}
+    case 'recent':{const it=recents.map(id=>byId[id]).filter(Boolean);
+      html=viewList('Recientes','🕘','Los últimos prompts que abriste.',it,`<div class="empty"><b>Todavía no has abierto ninguno</b>Cuando abras prompts, aparecerán aquí.</div>`);title='Recientes';break;}
+    case 'search':html=viewSearch(route.q);title='Búsqueda: '+route.q;break;
+    case 'tools':html=viewTools();title='Herramientas';break;
+    case 'rules':html=viewRules();title='Reglas de oro';break;
+    case 'guia':html=viewGuia();title='Guía rápida';break;
+    case 'prompt':
+      if(byId[route.id]){recents=[route.id].concat(recents.filter(x=>x!==route.id)).slice(0,8);lsSet('dc_recents',recents);title=byId[route.id].t;bar=true;}
+      html=viewPrompt(route.id);break;
+    default:html=viewNotFound();
+  }
+  document.title=title+' · Prompts DBEE';
+  const main=$('#main');
+  main.innerHTML=html+(bar?`<div class="mbar"><button class="btn" data-copy>📋 Copiar prompt</button></div>`:'');
+  main.classList.toggle('hasbar',bar);
+  renderSide();
+  updatePv();
+  document.body.classList.remove('menu');
+  if(changed){window.scrollTo(0,0);}
+  lastKey=key;
+}
+function rerender(){const y=window.scrollY;const keep=lastKey;render();lastKey=keep;window.scrollTo(0,y);}
+
+/* ---------- copiar y avisos ---------- */
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200);}
+async function copyText(txt){
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(txt);return true;}}catch(e){}
+  try{const ta=document.createElement('textarea');ta.value=txt;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,ta.value.length);const ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}
+}
+function toggleFav(id){favs=favs.includes(id)?favs.filter(x=>x!==id):favs.concat(id);lsSet('dc_favs',favs);return favs.includes(id);}
+
+/* ---------- sugerencias del buscador ---------- */
+function showSug(box,q){
+  const sug=box.querySelector('.sug');if(!sug)return;
+  q=q.trim();
+  if(q.length<2){sug.hidden=true;sug.innerHTML='';return;}
+  const res=search(q);
+  if(!res.length){sug.innerHTML=`<div class="si all" style="cursor:default;color:var(--mut)">Sin resultados para «${esc(q)}». Prueba con otra palabra.</div>`;sug.hidden=false;return;}
+  sug.innerHTML=res.slice(0,6).map(p=>`<a class="si" href="#/p/${p.id}"><span class="e" aria-hidden="true">${catById[p.cat].e}</span><div><b>${esc(p.t)}</b><span>${esc(p.when)}</span></div></a>`).join('')
+    +`<a class="si all" href="#/buscar/${encodeURIComponent(q)}">Ver los ${res.length} ${res.length===1?'resultado':'resultados'} →</a>`;
+  sug.hidden=false;
+}
+function hideSugs(){document.querySelectorAll('.sug').forEach(s=>{s.hidden=true;});}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',async e=>{
+  const t=e.target;
+  if(t.closest('[data-menu]')){document.body.classList.add('menu');return;}
+  if(t===$('#scrim')){document.body.classList.remove('menu');return;}
+  if(t.closest('#side a')){document.body.classList.remove('menu');}
+  if(t.closest('[data-theme]')){toggleTheme();return;}
+  const fv=t.closest('[data-fav]');
+  if(fv){e.preventDefault();const on=toggleFav(fv.dataset.fav);toast(on?'Guardado en favoritos ★':'Quitado de favoritos');rerender();return;}
+  const out=t.closest('[data-out]');if(out){outF=out.dataset.out;rerender();return;}
+  if(t.closest('[data-ready]')){readyF=!readyF;rerender();return;}
+  const qb=t.closest('[data-q]');if(qb){location.hash='#/buscar/'+encodeURIComponent(qb.dataset.q);return;}
+  if(t.closest('[data-copy]')){const p=byId[route.id];if(p){const ok=await copyText(plainPrompt(p));toast(ok?'Prompt copiado ✔ Ahora pégalo en tu IA':'No se pudo copiar: selecciona el texto de la vista previa');}return;}
+  const ai=t.closest('[data-ai]');
+  if(ai){const p=byId[route.id];if(p){copyText(plainPrompt(p)).then(ok=>toast(ok?'Prompt copiado ✔ Pégalo con Ctrl+V':'Abre la IA y pega el prompt a mano'));}return;}
+  if(!t.closest('.sbox'))hideSugs();
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-search]');if(!f)return;
+  e.preventDefault();
+  const q=(f.querySelector('.sq').value||'').trim();
+  if(q)location.hash='#/buscar/'+encodeURIComponent(q);
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.classList&&t.classList.contains('sq')){showSug(t.closest('.sbox'),t.value);return;}
+  if(t.dataset&&t.dataset.var){const p=byId[route.id];if(p){valsOf(p)[t.dataset.var]=t.value;updatePv();}}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='ctxT'){ctxOn=t.checked;lsSet('dc_ctx',ctxOn);updatePv();return;}
+  if(t.dataset&&t.dataset.var){const p=byId[route.id];if(p){valsOf(p)[t.dataset.var]=t.value;updatePv();}return;}
+  if(t.dataset&&'area' in t.dataset){area=t.value;lsSet('dc_area',area);toast(area?'Área guardada: '+area:'Área quitada');rerender();}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){hideSugs();document.body.classList.remove('menu');return;}
+  const t=e.target;
+  if(e.key==='ArrowDown'&&t.classList&&t.classList.contains('sq')){const a=t.closest('.sbox').querySelector('.sug:not([hidden]) .si[href]');if(a){e.preventDefault();a.focus();}}
+  else if((e.key==='ArrowDown'||e.key==='ArrowUp')&&t.classList&&t.classList.contains('si')){
+    const all=[...t.closest('.sug').querySelectorAll('.si[href]')];const i=all.indexOf(t);
+    const nx=all[i+(e.key==='ArrowDown'?1:-1)];e.preventDefault();
+    if(nx)nx.focus();else if(e.key==='ArrowUp')t.closest('.sbox').querySelector('.sq').focus();
+  }
+});
+window.addEventListener('hashchange',render);
+setInterval(()=>{const i=document.querySelector('.hero .sq');if(i&&document.activeElement!==i&&!i.value){i.placeholder=PH[Math.floor(Date.now()/3200)%PH.length];}},1600);
+
+/* ---------- arranque ---------- */
+render();
+(function(){const i=document.querySelector('.hero .sq');if(i)i.placeholder=PH[0];})();
+</script>
+</body>
+</html>
